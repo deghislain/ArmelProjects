@@ -1,0 +1,48 @@
+/*structure*/
+.wrapper {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	background: rgba(202, 208, 255, 0.7);
+	z-index: 10;
+}
+/*work area*/
+.container1 {
+	width: 400px;
+	height: 300px;
+	margin: 0 auto;
+	margin-top: 200px;
+	margin-bottom: 5px;
+	border: 1px #bbb solid;
+	-webkit-box-shadow: 3px 3px 7px #777;
+	-moz-box-shadow: 3px 3px 7px #777;
+	background: rgba(255, 255, 255, 0.7);
+}
+.formContainer {
+	width: 200px;
+	height: 200px;
+	margin: 0 auto;
+	margin-top: 200px;
+	margin-bottom: 5px;
+}
+/*navigation area*/
+.navBar{
+	width: 940px;
+	height: 50px;
+	margin: 0 auto;
+	background: rgba(0, 0, 0, 0.7);
+}
+
+navBar .menu {
+	font-size: 1px;
+}
+.internalDiv{
+	align: center;
+	margin-top: 70px;
+}
+.h4Style{
+font-weight: bold;
+color: #FF0000;
+}
