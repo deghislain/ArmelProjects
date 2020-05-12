@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SmallServicesImpl" targetNamespace="http://serviceimpl.proj.perso.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://serviceimpl.proj.perso.com/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://serviceinterf.proj.perso.com">
+  <wsdl:import namespace="http://serviceinterf.proj.perso.com" location="SmallServices.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="SmallServicesImplSoapBinding" type="ns1:SmallServices">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="convertC2F">
+      <soap12:operation soapAction="urn:ConvertC2F" style="document"/>
+      <wsdl:input name="convertC2F">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="convertC2FResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertF2C">
+      <soap12:operation soapAction="urn:ConvertF2C" style="document"/>
+      <wsdl:input name="convertF2C">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="convertF2CResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StorageServices">
+      <soap12:operation soapAction="urn:StorageServices" style="document"/>
+      <wsdl:input name="StorageServices">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="StorageServicesResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sort">
+      <soap12:operation soapAction="urn:Sort" style="document"/>
+      <wsdl:input name="sort">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sortResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SmallServicesImpl">
+    <wsdl:port name="SmallServicesImplPort" binding="tns:SmallServicesImplSoapBinding">
+      <soap12:address location="http://localhost:9090/SmallServicesImplPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

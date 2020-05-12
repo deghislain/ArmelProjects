@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SmallServices" targetNamespace="http://serviceinterf.proj.perso.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://serviceinterf.proj.perso.com">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://serviceinterf.proj.perso.com" schemaLocation="smallservicesimpl_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="convertC2F">
+    <wsdl:part name="parameters" element="ns1:convertC2F">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="convertF2C">
+    <wsdl:part name="parameters" element="ns1:convertF2C">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="StorageServices">
+    <wsdl:part name="parameters" element="ns1:StorageServices">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="StorageServicesResponse">
+    <wsdl:part name="parameters" element="ns1:StorageServicesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sort">
+    <wsdl:part name="parameters" element="ns1:sort">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="convertC2FResponse">
+    <wsdl:part name="parameters" element="ns1:convertC2FResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="convertF2CResponse">
+    <wsdl:part name="parameters" element="ns1:convertF2CResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sortResponse">
+    <wsdl:part name="parameters" element="ns1:sortResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SmallServices">
+    <wsdl:operation name="convertC2F">
+      <wsdl:input name="convertC2F" message="ns1:convertC2F">
+    </wsdl:input>
+      <wsdl:output name="convertC2FResponse" message="ns1:convertC2FResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="convertF2C">
+      <wsdl:input name="convertF2C" message="ns1:convertF2C">
+    </wsdl:input>
+      <wsdl:output name="convertF2CResponse" message="ns1:convertF2CResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StorageServices">
+      <wsdl:input name="StorageServices" message="ns1:StorageServices">
+    </wsdl:input>
+      <wsdl:output name="StorageServicesResponse" message="ns1:StorageServicesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sort">
+      <wsdl:input name="sort" message="ns1:sort">
+    </wsdl:input>
+      <wsdl:output name="sortResponse" message="ns1:sortResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

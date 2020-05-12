@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:tns="http://serviceinterf.proj.perso.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://serviceinterf.proj.perso.com" version="1.0">
+<xs:element name="StorageServices" type="tns:StorageServices"/>
+<xs:element name="StorageServicesResponse" type="tns:StorageServicesResponse"/>
+<xs:element name="convertC2F" type="tns:convertC2F"/>
+<xs:element name="convertC2FResponse" type="tns:convertC2FResponse"/>
+<xs:element name="convertF2C" type="tns:convertF2C"/>
+<xs:element name="convertF2CResponse" type="tns:convertF2CResponse"/>
+<xs:element name="sort" type="tns:sort"/>
+<xs:element name="sortResponse" type="tns:sortResponse"/>
+<xs:complexType name="convertC2F">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="convertC2FResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="convertF2C">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="convertF2CResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="StorageServices">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="StorageServicesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="sort">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="sortResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
