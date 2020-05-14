@@ -30,4 +30,15 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  
+  <servlet>
+	<servlet-name>SmallServicesControler</servlet-name>
+	<servlet-class>com.perso.proj.client.controller.SmallServicesControler</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>SmallServicesControler</servlet-name>
+	<url-pattern>/SmallServicesControler/*</url-pattern>
+ </servlet-mapping>
+ 
 </web-app>

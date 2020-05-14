@@ -22,7 +22,7 @@ public interface SmallServices {
 	@WebMethod(operationName = "convertC2F", action = "urn:ConvertC2F")
 	public int convertC2F(@WebParam(name = "arg0") int c);
 	/**
-	 * This service convert a temperature in degree Fahrenheit to Celssius
+	 * This service convert a temperature in degree Fahrenheit to Celsius
 	 * @param take in input the temperature f in Fahrenheit and
 	 * @return the equivalent in Celssius
 	 */
