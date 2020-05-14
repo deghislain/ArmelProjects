@@ -39,15 +39,27 @@ public class SmallServicesImpl implements SmallServices{
 	private String sortStrNum(String s) {
 		strArr = new String[s.length()];
 		strArr = s.split("\\,");
-		/*for(int i =0; i<s.length(); i++) {
-			intArr[i] = s.charAt(i+1);
-		}*/
-		this.quickSort(strArr, 0, strArr.length-1);
 		String strNum = "";
-		int index = 0;
-		for(index = 0; index<strArr.length; index++) {
-			strNum += strArr[index] + ",";
+		try { // we might have some number format exception
+			this.quickSort(strArr, 0, strArr.length-1);
+		}catch(Exception e) {
+			strNum = null;
 		}
+		
+		if(strNum != null) {
+			for(int index = 0; index<strArr.length; index++) {
+				if(index != strArr.length) {//to avoid a comma after the last number
+					strNum += strArr[index] + ",";
+				}else {
+					strNum += strArr[index];
+				}
+				
+			}
+		}else {
+			// this is return if the input has some invalid numbers that can generate number format exception
+			strNum = "Invalid Input"; 
+		}
+		
 		return strNum;
 	}
 	

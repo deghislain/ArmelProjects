@@ -14,6 +14,7 @@
 					<h3>Temperature Converter</h3>
 					<label>Temperature</label>
 					<input name="temp" type="text">
+					<input type="hidden" value="tempConv" name ="action"/>
 					<label>From C/F</label>
 					<select name="from" >
 						<option>C</option>
@@ -31,6 +32,7 @@
 					<label>Insert a string of numbers here e.g: "1,2,3.."</label>
 					<input name="strNum" size="50">
 					<input  type="submit" value="Sort" />
+					<input type="hidden" value="sorter" name ="action"/>
 					<h4 style="color: red"><% String sortedStr = (String)request.getSession().getAttribute("sortedStr");
 					        if(sortedStr != null){ out.print(sortedStr);}%>
 					</h4>

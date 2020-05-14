@@ -35,18 +35,38 @@ public class SmallServicesControler extends HttpServlet {
 		String temp = request.getParameter("temp");
 		String from = request.getParameter("from");
 		HttpSession  session = request.getSession(true);
+		String errMsg = null;
+		String newTemp = "";
+		String action = request.getParameter("action");
 		
-		if(null != temp && null != from) {
-			String newTemp = sm.convertTemperature(Integer.parseInt(temp), from.charAt(0));
-			session.setAttribute("newTemp", newTemp);
-		}else {
-			session.setAttribute("newTemp", "Invalid input, insert a valid number and the temperature type");
+		if(null != action && action.equals("tempConv")) {
+			if(null != temp && !temp.isEmpty() && null != from && !from.isEmpty()) {
+				try {
+					 newTemp = sm.convertTemperature(Integer.parseInt(temp), from.charAt(0));
+				}catch(Exception e) {
+					errMsg = "Invalid input, insert a valid number and the temperature type";
+				}
+				if(errMsg == null) {
+					session.setAttribute("newTemp", newTemp);
+				}
+				
+			}else {
+				errMsg = "Invalid input, insert a valid number and the temperature type";
+				session.setAttribute("newTemp", errMsg);
+			}
 		}
-		String strNum = request.getParameter("strNum");
-		if(null != strNum) {
-			String sortedStr = sm.sortString(strNum);
-			session.setAttribute("sortedStr", sortedStr );
+		if(null != action && action.equals("sorter")) {
+			String strNum = request.getParameter("strNum");
+			
+			if(null != strNum && !strNum.isEmpty()) {
+				String sortedStr = sm.sortString(strNum);
+				session.setAttribute("sortedStr", sortedStr );
+			}else {
+				errMsg = "Invalid String Of Numbers";
+				session.setAttribute("sortedStr", errMsg);
+			}
 		}
+		
 		response.sendRedirect("index.jsp");
 	}
 
