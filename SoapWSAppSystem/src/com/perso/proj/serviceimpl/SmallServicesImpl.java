@@ -32,54 +32,59 @@ public class SmallServicesImpl implements SmallServices{
 		return Math.round(c);
 	}
 	
-	int[] intArr = null;
+	String[] strArr = null;
 	public String sort(String s) {
 		return this.sortStrNum(s);
 	}
 	private String sortStrNum(String s) {
-		intArr = new int[s.length()];
-		for(int i =0; i<s.length(); i++) {
+		strArr = new String[s.length()];
+		strArr = s.split("\\,");
+		/*for(int i =0; i<s.length(); i++) {
 			intArr[i] = s.charAt(i+1);
+		}*/
+		this.quickSort(strArr, 0, strArr.length-1);
+		String strNum = "";
+		int index = 0;
+		for(index = 0; index<strArr.length; index++) {
+			strNum += strArr[index] + ",";
 		}
-		this.quickSort(intArr, 0, intArr.length-1);
-		
-		return intArr.toString();
+		return strNum;
 	}
 	
-	private void quickSort(int intArr[], int left, int right) {
+	private void quickSort(String strArr[], int left, int right) {
 		
 		if(left < right) {
-			int pi = partition(intArr, left, right);
-			this.quickSort(intArr, left, pi-1);
-			this.quickSort(intArr, left+1, right);
+			int pi = partition(strArr, left, right);
+			this.quickSort(strArr, left, pi-1);
+			this.quickSort(strArr, left+1, right);
 		}
 		
 	}
 	
-	private int partition(int[] intArr, int left, int right) {
-		int pivot = intArr[right];
+	private int partition(String[] strArr, int left, int right) {
+		int pivot = Integer.parseInt(strArr[right]);
 		int i = left-1;
 		
 		
 		for(int index =left; index < right; index++) {
-			if(intArr[index]>pivot) {
+			if(Integer.parseInt(strArr[index]) <pivot) {
 				i++;
-				this.swap(intArr, i, index);
+				this.swap(strArr, i, index);
 			}
 		}
-		intArr = this.swap(intArr, i+1, right);
+		strArr = this.swap(strArr, i+1, right);
 		
 		return i+1;
 	}
 	
-	private int[] swap(int[] intArr, int index, int level) {
-		int temp = 0;
-		if(intArr[index]>intArr[level]) {
-			temp = intArr[index];
-			intArr[index] = intArr[level];
-			intArr[level] = temp;
+	private String[] swap(String[] strArr, int index, int level) {
+		String temp = "0";
+		if(Integer.parseInt(strArr[index])>Integer.parseInt(strArr[level])) {
+			temp = strArr[index];
+			strArr[index] = strArr[level];
+			strArr[level] = temp;
 		}
-		return intArr;
+		return strArr;
 	}
 	
 	public String StorageServices(String fileNameOrUrl) {

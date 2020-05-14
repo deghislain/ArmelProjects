@@ -34,14 +34,20 @@ public class SmallServicesControler extends HttpServlet {
 		SmallServicesModel  sm = new SmallServicesModel();
 		String temp = request.getParameter("temp");
 		String from = request.getParameter("from");
+		HttpSession  session = request.getSession(true);
+		
 		if(null != temp && null != from) {
 			String newTemp = sm.convertTemperature(Integer.parseInt(temp), from.charAt(0));
-			HttpSession  session = request.getSession(true);
 			session.setAttribute("newTemp", newTemp);
+		}else {
+			session.setAttribute("newTemp", "Invalid input, insert a valid number and the temperature type");
+		}
+		String strNum = request.getParameter("strNum");
+		if(null != strNum) {
+			String sortedStr = sm.sortString(strNum);
+			session.setAttribute("sortedStr", sortedStr );
 		}
 		response.sendRedirect("index.jsp");
-		//request.getRequestDispatcher("index.jsp").forward(request, response);
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**

@@ -11,7 +11,7 @@
 			<h2 style="padding-left: 500px">Collection of Small Sevices</h2>
 			<form method="Post" action="SmallServicesControler">
 				<div>
-					<h4>Temperature Converter</h4>
+					<h3>Temperature Converter</h3>
 					<label>Temperature</label>
 					<input name="temp" type="text">
 					<label>From C/F</label>
@@ -20,8 +20,20 @@
 						<option>F</option>
 					</select>
 					<input type="submit" value="Convert"/>
-					<h3 style="color: red"><% String result = (String)request.getSession().getAttribute("newTemp");
-					        if(result != null){ out.print(result);}%></h3>
+					<h4 style="color: red"><% String result = (String)request.getSession().getAttribute("newTemp");
+					        if(result != null){ out.print(result);}%>
+					</h4>
+				</div>
+			</form>
+			<form action="SmallServicesControler" method="Post">
+				<div style="padding-top: 5px">
+				<h3>Numbers Sorter</h3>
+					<label>Insert a string of numbers here e.g: "1,2,3.."</label>
+					<input name="strNum" size="50">
+					<input  type="submit" value="Sort" />
+					<h4 style="color: red"><% String sortedStr = (String)request.getSession().getAttribute("sortedStr");
+					        if(sortedStr != null){ out.print(sortedStr);}%>
+					</h4>
 				</div>
 			</form>
 		</div>

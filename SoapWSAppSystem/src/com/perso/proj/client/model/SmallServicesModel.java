@@ -40,6 +40,20 @@ public class SmallServicesModel {
 		return result;
 	}
 	
+	public String sortString(String str) {
+		return this.doTheSorting(str);
+	}
+	
+	private String doTheSorting(String str) {
+		String newStr = "";
+		if(null != proxy) {
+			newStr = proxy.sort(str);
+		}
+		if(newStr == null || newStr.isEmpty()) {
+			newStr = "No Result: The service might not be running";
+		}
+		return newStr;
+	}
 	private SmallServices getTheProxy() {
 		Service smallServices = null;
 		SmallServices proxy = null;
