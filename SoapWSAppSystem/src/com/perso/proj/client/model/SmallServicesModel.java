@@ -54,6 +54,15 @@ public class SmallServicesModel {
 		}
 		return newStr;
 	}
+	
+	public String storeFile(String filePath) {
+		return this.store(filePath);
+	}
+	
+	private String store(String filePath) {
+		String result = proxy.StorageServices(filePath);
+		return result;
+	}
 	private SmallServices getTheProxy() {
 		Service smallServices = null;
 		SmallServices proxy = null;

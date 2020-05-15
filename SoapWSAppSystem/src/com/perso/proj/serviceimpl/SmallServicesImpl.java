@@ -3,7 +3,15 @@
  */
 package com.perso.proj.serviceimpl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.jws.WebService;
+
+import org.apache.commons.io.FileUtils;
 
 import com.perso.proj.serviceinterf.SmallServices;
 
@@ -15,6 +23,7 @@ import com.perso.proj.serviceinterf.SmallServices;
 @WebService(endpointInterface = "com.perso.proj.serviceinterf.SmallServices", 
 serviceName = "SmallServicesImpl", portName = "SmallServicesImplPort")
 public class SmallServicesImpl implements SmallServices{
+	 private static final String UPLOAD_DIRECTORY = "uploadedFiles";
 	
 	public int convertC2F(int c) {
 		return this.C2F(c);
@@ -102,8 +111,25 @@ public class SmallServicesImpl implements SmallServices{
 	public String StorageServices(String fileNameOrUrl) {
 		return this.storeFile(fileNameOrUrl);
 	} 
-	private String storeFile(String fNameOrURL) {
-		return fNameOrURL;
+	private String storeFile(String filePath) {
+		String result = "OK";
+		File srcFile = new File(filePath);
+		File destDir = new File(UPLOAD_DIRECTORY);
+		try {
+			 Path path = Paths.get(UPLOAD_DIRECTORY);
+
+		        if (!Files.exists(path)) {
+		            
+		            Files.createDirectory(path);
+		        }
+			FileUtils.copyFileToDirectory(srcFile, destDir);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result = "KO";
+		}
+		
+		return result;
 	}
 	
 }
