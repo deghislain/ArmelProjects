@@ -16,8 +16,8 @@
 						<input name="numeral" type="text">
 						<label>From </label>
 						<select name="from" >
-							<option>Numeral-to-Roman</option>
-							<option>Roman-to-Numeral</option>
+							<option>Roman-to-Number</option>
+<!-- 							<option>Number-to-Roman</option> -->
 						</select>
 						<input type="submit" value="Convert"/>
 					</div>

@@ -32,11 +32,10 @@ public class ConverterController{
 	
 	@RequestMapping("/index")
 	public String showCalculusResult(HttpServletRequest req, Model model) {
-		String numeral = req.getParameter("numeral");
+		String numeral = req.getParameter("numeral");// we get the number provided by the user in html form
 		String from    = req.getParameter("from");
 		
-		
-		String result = service.convert(numeral, from);
+		String result = service.convert(numeral, from);// we call the service for the convertion
 		
 		model.addAttribute("result", result);
 		return "index";
