@@ -17,12 +17,12 @@
 						<label>From </label>
 						<select name="from" >
 							<option>Roman-to-Number</option>
-<!-- 							<option>Number-to-Roman</option> -->
+							<option>Number-to-Roman</option>
 						</select>
 						<input type="submit" value="Convert"/>
 					</div>
 					<div>
-						<h3>Result: ${result}</h3>
+						<h3 style="color:red">Result: ${result}</h3>
 					</div>
 			</form>
 		</div>

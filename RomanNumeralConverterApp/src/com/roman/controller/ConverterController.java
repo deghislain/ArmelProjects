@@ -34,8 +34,23 @@ public class ConverterController{
 	public String showCalculusResult(HttpServletRequest req, Model model) {
 		String numeral = req.getParameter("numeral");// we get the number provided by the user in html form
 		String from    = req.getParameter("from");
-		
-		String result = service.convert(numeral, from);// we call the service for the convertion
+		String result = "";
+		if(null != from && !from.isEmpty() && from.equals("Number-to-Roman") && null != numeral && !numeral.isEmpty()) {
+			try {
+				 Integer.parseInt(numeral);
+			}catch(Exception e) {
+				e.printStackTrace();
+				result = numeral + " Is Invalid Number ";
+				model.addAttribute("result", result);
+				return "index";// do not call the service if the number inserted is not valid
+			}
+		}
+		if(null != numeral && !numeral.isEmpty()) {
+		// we call the service for the convertion
+			result = service.convert(numeral, from);
+		}else {
+			result = "Invalid Number ";
+		}
 		
 		model.addAttribute("result", result);
 		return "index";
