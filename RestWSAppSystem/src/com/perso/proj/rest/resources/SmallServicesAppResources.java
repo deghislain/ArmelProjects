@@ -31,5 +31,22 @@ public class SmallServicesAppResources {
 		return result;
 	}
 	
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("{strNum}")
+	public String getSortedString(@PathParam("strNum") String unsortStrNum) {
+		String sortStrNum = service.sort(unsortStrNum);
+		
+		return sortStrNum;
+	}
+	
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	@Path("{fileToUpload}")
+	public String storeFile(@PathParam("fileToUpload")String fileUrl) {
+		String result = service.StorageServices(fileUrl);
+		return result;
+	}
+	
 
 }
