@@ -1,5 +1,5 @@
 SOAPWSAppSystem is a web service platform that provide a variety of services.
-The following technology was used: java, eclipse, tomcat as web runtime, CFX as web service 
+The following technologies were used: java, eclipse, tomcat as web runtime, CFX as web service 
 runtime.
 
 The platform provide the following services:
