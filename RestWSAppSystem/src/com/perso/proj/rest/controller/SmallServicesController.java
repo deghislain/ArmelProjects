@@ -1,6 +1,7 @@
 package com.perso.proj.rest.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -21,6 +22,14 @@ import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
@@ -71,9 +80,9 @@ public class SmallServicesController extends HttpServlet {
 		
 		// here we process the file upload
 				 if (ServletFileUpload.isMultipartContent(request)) {
-					 String filePath = processUploadFile(request);
-					 strUrl = strUrl + filePath ;
-					 String result = serviceCall(strUrl);
+					 //String filePath = processUploadFile(request);
+					// strUrl = strUrl + filePath ;
+					 String result = processUploadFile(request);
 					 if(result.equals("KO")) {
 						 result = "Unable to store the file";
 					 }else {
@@ -140,7 +149,31 @@ public class SmallServicesController extends HttpServlet {
 		} catch (Exception ex) {
 			request.setAttribute("message", "There was an error: " + ex.getMessage());
 		}
-		return absolPath;
+		
+		
+		return this.uploadServiceCall(absolPath);
+	}
+	
+	//this method call the upload service
+	private String uploadServiceCall(String absolPath) {
+		File inFile = new File(absolPath);
+		FileInputStream fis = null;
+		String responseString = "";
+		try {
+			fis = new FileInputStream(inFile);
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost httppost = new HttpPost("http://localhost:8080/RestWSAppSystem/rest/smallService");
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create(); 
+			builder.addPart("file", new InputStreamBody(fis, inFile.getName())); // how to only send the file path
+			HttpEntity entity = builder.build();
+			httppost.setEntity(entity);
+			HttpResponse response = client.execute(httppost);
+			HttpEntity responseEntity = response.getEntity();
+			responseString = EntityUtils.toString(responseEntity, "UTF-8");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return responseString;
 	}
 
 }

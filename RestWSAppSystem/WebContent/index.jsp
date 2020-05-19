@@ -42,7 +42,7 @@
 				<div style="padding-top: 5px">
 					<H3>File Upload</H3>
 					<label>Choose File</label>
-					<input type="file" name="fileToUpload" id="fileToUpload"/>
+					<input type="file" name="file" id="file"/>
 					<input type="hidden" value="fUpload" name ="action"/>
 					<input type="submit" value="Upload"/>
 					<h4 style="color: red"><% result = (String)request.getSession().getAttribute("result");

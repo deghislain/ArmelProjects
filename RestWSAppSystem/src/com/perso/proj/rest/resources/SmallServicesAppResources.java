@@ -3,11 +3,17 @@
  */
 package com.perso.proj.rest.resources;
 
+import java.io.InputStream;
+
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.perso.proj.rest.services.SmallServices;
 
@@ -40,11 +46,10 @@ public class SmallServicesAppResources {
 		return sortStrNum;
 	}
 	
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	@Path("{fileToUpload}")
-	public String storeFile(@PathParam("fileToUpload")String fileUrl) {
-		String result = service.StorageServices(fileUrl);
+	@POST
+	@Produces(MediaType.MULTIPART_FORM_DATA)
+	public String storeFile(  @FormDataParam("file") FormDataContentDisposition fileDetail) {
+		String result = service.StorageServices(fileDetail.getFileName());
 		return result;
 	}
 	
