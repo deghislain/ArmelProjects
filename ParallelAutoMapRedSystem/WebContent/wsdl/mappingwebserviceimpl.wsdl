@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MappingWebServiceImpl" targetNamespace="http://serviceimpl.ws.mapred.proj.perso.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://serviceimpl.ws.mapred.proj.perso.com/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://serviceinterf.ws.mapred.proj.perso.com">
+  <wsdl:import namespace="http://serviceinterf.ws.mapred.proj.perso.com" location="IMappingWebService.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="MappingWebServiceImplSoapBinding" type="ns1:IMappingWebService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="map">
+      <soap12:operation soapAction="urn:Map" style="document"/>
+      <wsdl:input name="map">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="mapResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MappingWebServiceImpl">
+    <wsdl:port name="MappingWebServiceImplPort" binding="tns:MappingWebServiceImplSoapBinding">
+      <soap12:address location="http://localhost:9090/MappingWebServiceImplPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="IMappingWebService" targetNamespace="http://serviceinterf.ws.mapred.proj.perso.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://serviceinterf.ws.mapred.proj.perso.com">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://serviceinterf.ws.mapred.proj.perso.com" schemaLocation="mappingwebserviceimpl_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="map">
+    <wsdl:part name="parameters" element="ns1:map">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mapResponse">
+    <wsdl:part name="parameters" element="ns1:mapResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IMappingWebService">
+    <wsdl:operation name="map">
+      <wsdl:input name="map" message="ns1:map">
+    </wsdl:input>
+      <wsdl:output name="mapResponse" message="ns1:mapResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

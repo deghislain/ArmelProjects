@@ -16,8 +16,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.perso.proj.mapred.services.IMapReduceBufferService;
+import com.perso.proj.mapred.services.INameNodeService;
+import com.perso.proj.mapred.services.ITaskTrackerService;
+import com.perso.proj.mapred.services.JobTrackerThread;
+import com.perso.proj.mapred.services.MapReduceBufferService;
 import com.perso.proj.mapred.services.NameNodeService;
+import com.perso.proj.mapred.services.TaskTrackerService;
 
 /**
  * Servlet implementation class MapRedController
@@ -27,25 +34,32 @@ import com.perso.proj.mapred.services.NameNodeService;
 public class MapRedController {
 	private static final long serialVersionUID = 1L;
 	protected final Log logger = LogFactory.getLog(getClass());
-	private static final String UPLOAD_DIRECTORY = "/uploadedFiles";
+	private static final String UPLOAD_DIRECTORY = "uploadedFiles";
 	private String msg;
 	private String status;
 
     @Inject
-	private NameNodeService nService;
-
+	private INameNodeService nService;
+    
+    
+    public MapRedController() {
+ 
+    }
 	public MapRedController(NameNodeService nns) {
 		this.nService = nns;
 		this.status = "Waiting For File";
+		this.msg = "";
 	}
 
 	@RequestMapping(value ="/upload", method = RequestMethod.POST)
 	public String uploadFile(HttpServletRequest req, Model model) {
-		//String action = req.getParameter("action");
 		List<FileItem> formItems = processUploadFile(req, model);
 		if (null != formItems && !formItems.isEmpty()) {
 			String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
 			this.status = nService.storeFile(formItems, uploadPath);
+			model.addAttribute("status", this.status);
+		}else {
+			this.status = "File Upload Error";
 			model.addAttribute("status", this.status);
 		}
 
@@ -70,10 +84,18 @@ public class MapRedController {
 		model.addAttribute("status", this.status);
 		return formItems;
 	}
-	@RequestMapping(value = "partition", method = RequestMethod.GET)
+	
+	
+	@RequestMapping(value = "partition", method = RequestMethod.POST)
 public String performMapReduce(HttpServletRequest req, Model model) {
 	List<List<String>> parts = this.doDataPartition(req, model);
 	//TODO create threads
+	
+	IMapReduceBufferService mrbs = new MapReduceBufferService(parts);
+	String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
+	ITaskTrackerService tts = new TaskTrackerService();
+	JobTrackerThread jtt = new JobTrackerThread(mrbs, tts, uploadPath);
+	jtt.run();
 	return "/index";
 }
 	private List<List<String>> doDataPartition(HttpServletRequest req, Model model) {
@@ -89,8 +111,10 @@ public String performMapReduce(HttpServletRequest req, Model model) {
 					this.status = "Completed Map Reduce";
 					model.addAttribute("status", this.status);
 				}else {
-					this.msg = "Map Reduce Error";
+					this.msg = "Error while processing the file. Make sure you have uploaded an appropriate file and try again";
 					model.addAttribute("message", this.msg);
+					this.status = "Map Reduce Error";
+					model.addAttribute("status", this.status);
 				}
 				
 			}else {

@@ -26,7 +26,7 @@
 						<input type="submit" value="Upload" name="fUpload"/>
 					</div>
 			</form>
-			<form method="get" action="paraMapRedCont/partition">
+			<form method="post" action="paraMapRedCont/partition">
 					<div>
 						<H3>Choose N, the number of parallel threads. N >= 1</H3>
 						<label>Number of Threads</label> 
@@ -36,7 +36,7 @@
 						<input type="submit" value="Perform MapReduce Computation" style="color: blue">
 					</div>
 			</form>
-			<form method="get" action="paraMapRedCont/display">
+			<form method="post" action="paraMapRedCont/display">
 					<div style="padding-top: 40px; padding-left: 250px">
 						<input type="submit" value="Display Results" style="color: green">
 					</div>

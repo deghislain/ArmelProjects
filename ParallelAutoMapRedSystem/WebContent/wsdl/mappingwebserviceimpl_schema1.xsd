@@ -1,0 +1,32 @@
+<xs:schema xmlns:tns="http://serviceinterf.ws.mapred.proj.perso.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://serviceinterf.ws.mapred.proj.perso.com" version="1.0">
+
+  <xs:element name="map" type="tns:map"/>
+
+  <xs:element name="mapResponse" type="tns:mapResponse"/>
+
+  <xs:complexType name="map">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mapResponse">
+    <xs:sequence>
+      <xs:element name="_return">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="key" type="xs:string"/>
+                  <xs:element minOccurs="0" name="value" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

@@ -10,7 +10,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,13 +32,15 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class NameNodeService {
+public class NameNodeService implements INameNodeService{
 	private static final String RESULTS_FILE_NAME = "/results.xml";
-
+	
+	//This method store the uploaded file on disk
 	public String storeFile(List<FileItem> formItems, String filePath) {
 		return this.store(formItems, filePath);
 	}
-
+	
+	//upload file implementation
 	private String store(List<FileItem> formItems, String filePath) {
 		String result = "";
 		try {
@@ -61,54 +67,63 @@ public class NameNodeService {
 
 	public List<List<String>> partitionData(String filePath, int numThread) {
 		List<String> lines = this.loadDocument(filePath);
-		List<List<String>> words = null;
-		words = this.splitData(lines, numThread);
-		return words;
+		List<String> words = getWords(lines);
+		List<List<String>> parts = null;
+		if(words != null && !words.isEmpty()) {
+			parts = this.splitData(words, numThread);
+		}
+		
+		return parts;
 	}
 
 	private List<String> loadDocument(String filePath) {
 		List<String> lines = new ArrayList<String>();
-		try {
-			FileReader fr = new FileReader(filePath);
-			BufferedReader br = new BufferedReader(fr);
-			
-			try {
-				while(br.readLine() != null) {
-					String line = br.readLine();
-					if(null != line && !line.isEmpty()) {
-						lines.add(line);
-					}
+		String[] files = new File(filePath).list();
+		if(null != files) {
+			for(String f :files) {
+				if(f.endsWith(".txt")) {
+					filePath = filePath + "/" +f;
+					break;
 				}
-				br.close();
-				fr.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				lines = null;
 			}
-		} catch (FileNotFoundException e) {
+		}
+		Path path = Paths.get(filePath);
+		try {
+			lines = Files.readAllLines(path);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			lines = null;
 		}
 		return lines;
 	}
+	
+	private List<String> getWords(List<String> lines){
+		List<String>words = new ArrayList<String>();
+			for(String line : lines) {
+				String[] ws = line.split(" ");
+				words.addAll(Arrays.asList(ws));
+			}
+		return words;
+	}
 
 	//This method split the list of words into N list of words
 	private List<List<String>> splitData(List<String> allLines, int n) {
-		 int reste = allLines.size()%n;//we might have some extra lines when spliting the document in n parts
+		 int rest = allLines.size()%n;//we might have some extra lines when spliting the document in n parts
          int numElt = allLines.size() / n;
          List<List<String>> parts = new ArrayList<List<String>>();
-         int start = 0;
+         int fromIndex = 0;
+         int toIndex = numElt;
        //here we copy the first n-1 parts excluding the last part and eventual reste
-         while (start < allLines.size()- (numElt+reste)) {
+         while (fromIndex < allLines.size()- (numElt+rest)) {
         	 //here we generate parts by splitting the list in small subsets
-        	 List<String> part = allLines.subList(start, numElt);
+        	 List<String> part = allLines.subList(fromIndex, toIndex);
         	 parts.add(part);
-        	 start += numElt;
+        	 fromIndex += numElt;
+        	 toIndex += numElt;
          }
        //here we copy the last part + eventual extra
-         List<String> part = allLines.subList(start, numElt+start);
+         List<String> part = allLines.subList(fromIndex, toIndex + rest);
          parts.add(part);
 
 		return parts;
@@ -123,8 +138,6 @@ public class NameNodeService {
 		String result = "";
 		try {
 			Element words = new Element("words");
-			//Document doc = new Document(words);
-			
 			for(String r : results.keySet()) {
 				Element word = new Element("word");
 				word.setAttribute("NumberOccurencies", results.get(r));
@@ -151,7 +164,6 @@ public class NameNodeService {
 		HashMap<String, String> resultMap = new HashMap<String, String>();
 		filePath = filePath + RESULTS_FILE_NAME;
 		try {
-			//URL url = new URL(filePath);
 			File inputFile = new File(filePath);
 			SAXBuilder saxBuilder = new SAXBuilder();
 	        Document document = saxBuilder.build(inputFile);
