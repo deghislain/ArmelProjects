@@ -15,4 +15,15 @@
 			<bean class="org.apache.cxf.feature.LoggingFeature" />
 		</jaxws:features>
 	</jaxws:endpoint>
+	<jaxws:endpoint
+		xmlns:tns="http://serviceinterf.ws.mapred.proj.perso.com"
+		id="reducewebservice"
+		implementor="com.perso.proj.mapred.ws.serviceimpl.ReduceWebServiceImpl"
+		endpointName="tns:ReduceWebServiceImplPort"
+		serviceName="tns:ReduceWebServiceImpl"
+		address="/ReduceWebServiceImplPort">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
 </beans>

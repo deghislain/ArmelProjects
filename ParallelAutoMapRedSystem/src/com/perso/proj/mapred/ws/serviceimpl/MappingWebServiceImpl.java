@@ -3,11 +3,12 @@
  */
 package com.perso.proj.mapred.ws.serviceimpl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebService;
 
+import com.perso.proj.mapred.ws.entity.KeyValuePair;
 import com.perso.proj.mapred.ws.serviceinterf.IMappingWebService;
 
 /**
@@ -17,15 +18,17 @@ import com.perso.proj.mapred.ws.serviceinterf.IMappingWebService;
 @WebService(endpointInterface = "com.perso.proj.mapred.ws.serviceinterf.IMappingWebService", serviceName = "MappingWebServiceImpl", portName = "MappingWebServiceImplPort")
 public class MappingWebServiceImpl implements IMappingWebService {
 
-	public HashMap<String, String> map(List<String> words) {
+	public List<KeyValuePair> map(List<String> words) {
 		return this.mapWords(words);
 	}
 
-	private HashMap<String, String> mapWords(List<String> words) {
-		HashMap<String, String> mappedData = new HashMap<String, String>();
+	private List<KeyValuePair> mapWords(List<String> words) {
+		List<KeyValuePair> mappedData = new ArrayList<KeyValuePair>();
 
 		for (String key : words) {
-			mappedData.put(key, "1");
+			KeyValuePair kvp = new KeyValuePair();
+			kvp.put(key, 1);
+			mappedData.add(kvp);
 		}
 		return mappedData;
 	}

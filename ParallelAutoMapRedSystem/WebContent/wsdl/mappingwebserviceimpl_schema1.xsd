@@ -12,20 +12,14 @@
 
   <xs:complexType name="mapResponse">
     <xs:sequence>
-      <xs:element name="_return">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element minOccurs="0" name="key" type="xs:string"/>
-                  <xs:element minOccurs="0" name="value" type="xs:string"/>
-                </xs:sequence>
-              </xs:complexType>
-            </xs:element>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:keyValuePair"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="keyValuePair">
+    <xs:sequence>
+      <xs:element name="key" type="xs:string"/>
+      <xs:element name="value" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 

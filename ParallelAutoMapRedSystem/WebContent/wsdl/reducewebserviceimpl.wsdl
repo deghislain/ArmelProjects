@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ReduceWebServiceImpl" targetNamespace="http://serviceimpl.ws.mapred.proj.perso.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://serviceimpl.ws.mapred.proj.perso.com/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://serviceinterf.ws.mapred.proj.perso.com">
+  <wsdl:import namespace="http://serviceinterf.ws.mapred.proj.perso.com" location="IReduceWebService.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="ReduceWebServiceImplSoapBinding" type="ns1:IReduceWebService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reduce">
+      <soap12:operation soapAction="urn:Reduce" style="document"/>
+      <wsdl:input name="reduce">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reduceResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReduceWebServiceImpl">
+    <wsdl:port name="ReduceWebServiceImplPort" binding="tns:ReduceWebServiceImplSoapBinding">
+      <soap12:address location="http://localhost:9090/ReduceWebServiceImplPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

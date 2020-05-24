@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="IReduceWebService" targetNamespace="http://serviceinterf.ws.mapred.proj.perso.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://serviceinterf.ws.mapred.proj.perso.com">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://serviceinterf.ws.mapred.proj.perso.com" schemaLocation="reducewebserviceimpl_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="reduce">
+    <wsdl:part name="parameters" element="ns1:reduce">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reduceResponse">
+    <wsdl:part name="parameters" element="ns1:reduceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IReduceWebService">
+    <wsdl:operation name="reduce">
+      <wsdl:input name="reduce" message="ns1:reduce">
+    </wsdl:input>
+      <wsdl:output name="reduceResponse" message="ns1:reduceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

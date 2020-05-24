@@ -1,0 +1,39 @@
+<xs:schema xmlns:tns="http://serviceinterf.ws.mapred.proj.perso.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://serviceinterf.ws.mapred.proj.perso.com" version="1.0">
+
+  <xs:element name="reduce" type="tns:reduce"/>
+
+  <xs:element name="reduceResponse" type="tns:reduceResponse"/>
+
+  <xs:complexType name="reduce">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:keyValuePair"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="keyValuePair">
+    <xs:sequence>
+      <xs:element name="key" type="xs:string"/>
+      <xs:element name="value" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="reduceResponse">
+    <xs:sequence>
+      <xs:element name="_return">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="entry">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" name="key" type="xs:string"/>
+                  <xs:element minOccurs="0" name="value" type="xs:int"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

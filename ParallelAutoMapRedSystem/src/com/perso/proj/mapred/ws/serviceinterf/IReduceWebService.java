@@ -3,6 +3,7 @@
  */
 package com.perso.proj.mapred.ws.serviceinterf;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -13,10 +14,10 @@ import com.perso.proj.mapred.ws.entity.KeyValuePair;
 
 /**
  * @author deghislain
- *
+ *This class is a web service that will be called after the mapping in order to achieve the reduce operation
  */
 @WebService(targetNamespace = "http://serviceinterf.ws.mapred.proj.perso.com")
-public interface IMappingWebService {
-	@WebMethod(operationName = "map", action = "urn:Map")
-	public List<KeyValuePair> map(@WebParam(name = "arg0") List<String> words);
+public interface IReduceWebService {
+@WebMethod(operationName = "reduce", action = "urn:Reduce")
+public HashMap<String, Integer> reduce(@WebParam(name = "arg0") List<KeyValuePair> mapHash);
 }

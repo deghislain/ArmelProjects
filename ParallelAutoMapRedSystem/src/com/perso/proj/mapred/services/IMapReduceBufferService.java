@@ -6,6 +6,8 @@ package com.perso.proj.mapred.services;
 import java.util.HashMap;
 import java.util.List;
 
+import com.perso.proj.mapred.ws.entity.KeyValuePair;
+
 /**
  * @author deghislain
  *
@@ -15,16 +17,16 @@ public interface IMapReduceBufferService {
 	public List<String> getNextPart();
 	
 	//This method store the result of mapping to the buffer
-	public void addMappedDataToBuffer(HashMap<String, String>map);
+	public void addMappedDataToBuffer(List<KeyValuePair>map);
 	
 	//This method get a mapped data from buffer
-	public HashMap<String, String> getNextMappedData();
+	public List<KeyValuePair> getNextMappedData();
 	
 	//This method store the result of reducing to the buffer
-	public void addReducedDataToBuffer(HashMap<String, String>map);
+	public void addReducedDataToBuffer(HashMap<String, Integer>map);
 		
 	//This method get a reduced data from buffer
-	public HashMap<String, String> getNextReducedData();
+	public HashMap<String, Integer> getNextReducedData();
 	
 	public HashMap<String, String> getCombBuffer();
 	

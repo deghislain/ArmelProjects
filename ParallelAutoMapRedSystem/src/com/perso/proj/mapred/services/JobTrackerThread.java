@@ -3,8 +3,11 @@
  */
 package com.perso.proj.mapred.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.perso.proj.mapred.ws.entity.KeyValuePair;
 
 /**
  * @author deghislain
@@ -36,12 +39,12 @@ public class JobTrackerThread{
 			List<String> part = this.mrbService.getNextPart();
 			if( null!= part) {
 				this.doTheMapping(part);
-			}else {//TODO remove after test
-				this.isJobDone = true; 
 			}
 			
 			if(this.mrbService.getTotMapped()>0) {
 				this.doTheReducing();
+			}else {//TODO remove after test
+				this.isJobDone = true; 
 			}
 			
 			if(this.mrbService.getTotMapped() <=0 && this.mrbService.getTotReduced()<=0) {
@@ -51,7 +54,7 @@ public class JobTrackerThread{
 	}
 	
 	private void doTheMapping(List<String> part) {
-		HashMap<String, String> mapped = new HashMap<String, String>();
+		List<KeyValuePair> mapped = new ArrayList<KeyValuePair>();
 		if(null != part) {
 			mapped = this.ttService.map(part);
 			if(null != mapped && !mapped.isEmpty()) {
@@ -61,7 +64,13 @@ public class JobTrackerThread{
 	}
 	
 	private void doTheReducing() {
-		
+		List<KeyValuePair> mapped = this.mrbService.getNextMappedData();
+		if(null != mapped) {
+			HashMap<String, Integer> reduced = this.ttService.reduce(mapped);
+			if(null != reduced && !reduced.isEmpty()) {
+				this.mrbService.addReducedDataToBuffer(reduced);
+			}
+		}
 	}
 	
 	private void doTheCombining(String path) {
