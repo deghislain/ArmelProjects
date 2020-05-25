@@ -17,7 +17,7 @@ public interface INameNodeService {
 	
 	public List<List<String>> partitionData(String filePath, int numThread);
 	
-	public String storeResults(HashMap<String, String> results, String resultStoragePath);
+	public String storeResults(HashMap<String, Integer> results, String resultStoragePath);
 	
 	 HashMap<String, String> displayResults(String filePath);
 }

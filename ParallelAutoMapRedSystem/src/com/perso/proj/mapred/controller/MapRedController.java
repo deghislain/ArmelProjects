@@ -94,7 +94,7 @@ public String performMapReduce(HttpServletRequest req, Model model) {
 	IMapReduceBufferService mrbs = new MapReduceBufferService(parts);
 	String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
 	ITaskTrackerService tts = new TaskTrackerService();
-	JobTrackerThread jtt = new JobTrackerThread(mrbs, tts, uploadPath);
+	JobTrackerThread jtt = new JobTrackerThread(mrbs, tts, this.nService, uploadPath);
 	jtt.run();
 	return "/index";
 }

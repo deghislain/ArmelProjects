@@ -36,7 +36,7 @@
 						<input type="submit" value="Perform MapReduce Computation" style="color: blue">
 					</div>
 			</form>
-			<form method="post" action="paraMapRedCont/display">
+			<form method="get" action="paraMapRedCont/display">
 					<div style="padding-top: 40px; padding-left: 250px">
 						<input type="submit" value="Display Results" style="color: green">
 					</div>

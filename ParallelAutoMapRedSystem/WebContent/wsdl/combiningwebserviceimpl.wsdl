@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CombiningWebServiceImpl" targetNamespace="http://serviceimpl.ws.mapred.proj.perso.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://serviceimpl.ws.mapred.proj.perso.com/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://serviceinterf.ws.mapred.proj.perso.com">
+  <wsdl:import namespace="http://serviceinterf.ws.mapred.proj.perso.com" location="ICombiningWebService.wsdl">
+    </wsdl:import>
+  <wsdl:binding name="CombiningWebServiceImplSoapBinding" type="ns1:ICombiningWebService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="combine">
+      <soap12:operation soapAction="urn:Combine" style="document"/>
+      <wsdl:input name="combine">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="combineResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CombiningWebServiceImpl">
+    <wsdl:port name="CombiningWebServiceImplPort" binding="tns:CombiningWebServiceImplSoapBinding">
+      <soap12:address location="http://localhost:9090/CombiningWebServiceImplPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

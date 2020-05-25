@@ -26,7 +26,7 @@ public class MapReduceBufferService implements IMapReduceBufferService{
 	private List<HashMap<String, Integer>>reducedBuffer = new ArrayList<HashMap<String,Integer>>();
 	
 	//This buffer contains the data after combining process
-	private HashMap<String, String> combinedBuffer;
+	private HashMap<String, Integer> combinedBuffer;
 
 	//This property helps determine how many data we still have to map
 	private int totMapped;
@@ -106,16 +106,13 @@ public class MapReduceBufferService implements IMapReduceBufferService{
 	}
 
 	@Override
-	public HashMap<String, String> getCombBuffer() {
+	public HashMap<String, Integer> getCombBuffer() {
 		return this.combinedBuffer;
 	}
 
 	@Override
-	public void updateCombBuffer(HashMap<String, String> cb) {
-		//we synchronized to avoid overriding
-		synchronized(this.combinedBuffer) {
-			this.combinedBuffer = cb;
-		}
+	public void updateCombBuffer(HashMap<String, Integer> cb) {
+		this.combinedBuffer = cb;
 	}
 
 	@Override

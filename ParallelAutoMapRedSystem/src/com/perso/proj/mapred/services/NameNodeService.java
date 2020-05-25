@@ -126,17 +126,17 @@ public class NameNodeService implements INameNodeService{
 	}
 	
 	//This method stores the combined results of map reduce operations into results.xml file;
-	public String storeResults(HashMap<String, String> results, String resultStoragePath) {
+	public String storeResults(HashMap<String, Integer> results, String resultStoragePath) {
 		return this.store(results, resultStoragePath);
 	}
 	
-	private String store(HashMap<String, String> results, String resultStoragePath) {
+	private String store(HashMap<String, Integer> results, String resultStoragePath) {
 		String result = "";
 		try {
 			Element words = new Element("words");
 			for(String r : results.keySet()) {
 				Element word = new Element("word");
-				word.setAttribute("NumberOccurencies", results.get(r));
+				word.setAttribute("Frequency", String.valueOf(results.get(r)) );
 				word.setText(r);
 				words.addContent(word);
 			}

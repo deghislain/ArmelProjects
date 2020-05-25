@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ICombiningWebService" targetNamespace="http://serviceinterf.ws.mapred.proj.perso.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://serviceinterf.ws.mapred.proj.perso.com">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://serviceinterf.ws.mapred.proj.perso.com" schemaLocation="combiningwebserviceimpl_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="combine">
+    <wsdl:part name="parameters" element="ns1:combine">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="combineResponse">
+    <wsdl:part name="parameters" element="ns1:combineResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ICombiningWebService">
+    <wsdl:operation name="combine">
+      <wsdl:input name="combine" message="ns1:combine">
+    </wsdl:input>
+      <wsdl:output name="combineResponse" message="ns1:combineResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

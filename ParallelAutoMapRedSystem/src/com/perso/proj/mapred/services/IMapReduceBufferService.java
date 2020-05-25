@@ -28,9 +28,9 @@ public interface IMapReduceBufferService {
 	//This method get a reduced data from buffer
 	public HashMap<String, Integer> getNextReducedData();
 	
-	public HashMap<String, String> getCombBuffer();
+	public HashMap<String, Integer> getCombBuffer();
 	
-	public void updateCombBuffer(HashMap<String, String> cb);
+	public void updateCombBuffer(HashMap<String, Integer> cb);
 	
 	public int getTotMapped();
 	

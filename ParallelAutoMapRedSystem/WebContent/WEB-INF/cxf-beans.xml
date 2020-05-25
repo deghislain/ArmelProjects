@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jaxws="http://cxf.apache.org/jaxws"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
-	
+
 	<jaxws:endpoint
 		xmlns:tns="http://serviceinterf.ws.mapred.proj.perso.com"
 		id="mappingwebservice"
@@ -15,6 +15,7 @@
 			<bean class="org.apache.cxf.feature.LoggingFeature" />
 		</jaxws:features>
 	</jaxws:endpoint>
+	
 	<jaxws:endpoint
 		xmlns:tns="http://serviceinterf.ws.mapred.proj.perso.com"
 		id="reducewebservice"
@@ -26,4 +27,17 @@
 			<bean class="org.apache.cxf.feature.LoggingFeature" />
 		</jaxws:features>
 	</jaxws:endpoint>
+	
+	<jaxws:endpoint
+		xmlns:tns="http://serviceinterf.ws.mapred.proj.perso.com"
+		id="combiningwebservice"
+		implementor="com.perso.proj.mapred.ws.serviceimpl.CombiningWebServiceImpl"
+		endpointName="tns:CombiningWebServiceImplPort"
+		serviceName="tns:CombiningWebServiceImpl"
+		address="/CombiningWebServiceImplPort">
+		<jaxws:features>
+			<bean class="org.apache.cxf.feature.LoggingFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+	
 </beans>
