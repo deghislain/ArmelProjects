@@ -85,7 +85,6 @@ public class NameNodeService implements INameNodeService{
 				}
 			}
 		}
-		//Path path = Paths.get(filePath);
 		FileReader fr = null;
 		BufferedReader reader = null;
 		try {
@@ -98,16 +97,13 @@ public class NameNodeService implements INameNodeService{
 					lines.add(line);
 				}
 			}
-			//lines = Files.readAllLines(path);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			try {
 				fr.close();
 				reader.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
