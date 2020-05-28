@@ -34,10 +34,17 @@ public class MapReduceBufferService implements IMapReduceBufferService{
 	//This property helps determine how many data we still have to reduce
 	private int totReduced;
 	
+	//Indicates when to stop the process
+		private boolean isJobDone;
+		
+		private boolean isResultsStored;
+	
 	public MapReduceBufferService(List<List<String>> p) {
 		this.partsBuffer = p;
 		this.totMapped = p.size();
 		this.totReduced = p.size();
+		this.isJobDone = false;
+		this.isResultsStored = false;
 	}
 
 	@Override
@@ -125,4 +132,27 @@ public class MapReduceBufferService implements IMapReduceBufferService{
 		return this.totReduced;
 	}
 
+	@Override
+	public boolean getIsJobDone() {
+		
+		return this.isJobDone;
+	}
+
+	@Override
+	public boolean getIsResultsStored() {
+		
+		return this.isResultsStored;
+	}
+
+	@Override
+	public void setIsJobDone(boolean isd) {
+		this.isJobDone = isd;
+	}
+
+	@Override
+	public void setIsResultsStored(boolean irs) {
+		this.isResultsStored =  irs;
+	}
+
+	
 }

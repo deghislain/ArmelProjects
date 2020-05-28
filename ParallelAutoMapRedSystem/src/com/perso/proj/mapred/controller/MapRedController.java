@@ -90,14 +90,23 @@ public class MapRedController {
 	@RequestMapping(value = "partition", method = RequestMethod.POST)
 public ModelAndView performMapReduce(HttpServletRequest req, ModelMap model) {
 	List<List<String>> parts = this.doDataPartition(req, model);
-	//TODO create threads
-	
-	IMapReduceBufferService mrbs = new MapReduceBufferService(parts);
 	String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
-	ITaskTrackerService tts = new TaskTrackerService();
-	JobTrackerThread jtt = new JobTrackerThread(mrbs, tts, this.nService, uploadPath);
-	jtt.run();
 	
+	
+	if (null != parts && !parts.isEmpty()) {
+		String numThread = req.getParameter("numThread");
+		int nt = Integer.parseInt(numThread);
+		IMapReduceBufferService mrbs = new MapReduceBufferService(parts);
+		ITaskTrackerService tts = new TaskTrackerService();
+		JobTrackerThread[] arrThread = new JobTrackerThread[nt];
+
+		for (int index = 0; index < nt; index++) {
+			arrThread[index] = new JobTrackerThread(mrbs, tts, this.nService, uploadPath);
+			arrThread[index].setName("Thread " + index);
+			arrThread[index].start();
+			
+		}
+	}
 	ModelAndView mv = new ModelAndView("index", model);
 	return mv;
 }
@@ -111,7 +120,7 @@ public ModelAndView performMapReduce(HttpServletRequest req, ModelMap model) {
 				int nt = Integer.parseInt(numThread);
 				words = this.nService.partitionData(uploadPath, nt);
 				if (null != words && !words.isEmpty()) {
-					this.status = "Completed Map Reduce";
+					this.status = "Started Map Reduce";
 					model.addAttribute("status", this.status);
 				}else {
 					this.msg = "Error while processing the file. Make sure you have uploaded an appropriate file and try again";

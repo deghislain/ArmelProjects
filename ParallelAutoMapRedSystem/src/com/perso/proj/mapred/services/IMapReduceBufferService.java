@@ -35,5 +35,13 @@ public interface IMapReduceBufferService {
 	public int getTotMapped();
 	
 	public int getTotReduced();
+	
+	public boolean getIsJobDone();
+	
+	public boolean getIsResultsStored();
+	
+	public void setIsJobDone(boolean isd);
+	
+	public void setIsResultsStored(boolean irs);
 
 }

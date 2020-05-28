@@ -168,7 +168,7 @@ public class NameNodeService implements INameNodeService{
 			for(Element word : words) {
 				resultMap.put(word.getText(), word.getAttributeValue("Frequency"));
 			}
-		} catch (JDOMException | IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
