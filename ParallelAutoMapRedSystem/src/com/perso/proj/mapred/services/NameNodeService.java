@@ -3,8 +3,10 @@
  */
 package com.perso.proj.mapred.services;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -83,13 +85,32 @@ public class NameNodeService implements INameNodeService{
 				}
 			}
 		}
-		Path path = Paths.get(filePath);
+		//Path path = Paths.get(filePath);
+		FileReader fr = null;
+		BufferedReader reader = null;
 		try {
-			lines = Files.readAllLines(path);
+			fr = new FileReader(filePath);
+			reader = new BufferedReader(fr);
+			String line = "";
+			while(line != null) {
+				line = reader.readLine();
+				if(null != line && !line.isEmpty()) {
+					lines.add(line);
+				}
+			}
+			//lines = Files.readAllLines(path);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			lines = null;
+		}finally{
+			try {
+				fr.close();
+				reader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		return lines;
 	}
