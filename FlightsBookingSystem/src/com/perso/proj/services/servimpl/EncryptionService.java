@@ -21,32 +21,38 @@ public class EncryptionService implements IEncryptionService{
 	public String decrypt(String toDecrypt, int key1, int key2) {
 		
 		 //use the encryption method to decrypt the input 
-        return doubleKeysEncryption(toDecrypt, 44 - key1, 44 - key2);
+        return doubleKeysEncryption(toDecrypt, 45 - key1, 45 - key2);
 	}
 	
 	 //encrypt the given input using the 2 provided keys
     private String doubleKeysEncryption(String input, int key1, int key2)
     {
-        String rightString = halfOfStrin(input, 0);
-        String leftString = halfOfStrin(input, 1);
-        Encrypter rEncr = new Encrypter(key1);
-        Encrypter lEncr = new Encrypter(key2);
-        StringBuilder sb = new StringBuilder(input);
-        String encrRStr = rEncr.encrypt(rightString);
-        String encrLStr = lEncr.encrypt(leftString);
+    	 StringBuilder sb = null;
+    	if(input != null && !input.isEmpty()) {
+    		String rightString = halfOfStrin(input, 0);
+            String leftString = halfOfStrin(input, 1);
+            Encrypter rEncr = new Encrypter(key1);
+            Encrypter lEncr = new Encrypter(key2);
+            sb = new StringBuilder(input);
+            String encrRStr = rEncr.encrypt(rightString);
+            String encrLStr = lEncr.encrypt(leftString);
 
-        for (int i = 0, j = 0; j < sb.length(); j += 2) {
-            if (i < encrRStr.length() && sb.charAt(j) != ' ') {
-                sb.setCharAt(j,encrRStr.charAt(i++));
+            for (int i = 0, j = 0; j < sb.length(); j += 2) {
+                if (i < encrRStr.length() && sb.charAt(j) != ' ') {
+                    sb.setCharAt(j,encrRStr.charAt(i++));
+                }
             }
-        }
-        for (int i = 0, j = 1; j < sb.length(); j += 2)
-        {
-            if (i < encrLStr.length() && sb.charAt(j) != ' ')
+            for (int i = 0, j = 1; j < sb.length(); j += 2)
             {
-                sb.setCharAt(j,encrLStr.charAt(i++));
+                if (i < encrLStr.length() && sb.charAt(j) != ' ')
+                {
+                    sb.setCharAt(j,encrLStr.charAt(i++));
+                }
             }
-        }
+    	}else {
+    		sb = new StringBuilder("Input cannot be null or empty string");
+    	}
+        
 
 
         return sb.toString();

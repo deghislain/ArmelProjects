@@ -3,6 +3,8 @@
  */
 package com.perso.proj.services.servinterface;
 
+import com.perso.proj.entities.Account;
+
 /**
  * @author deghislain
  *
@@ -10,14 +12,12 @@ package com.perso.proj.services.servinterface;
 public interface IAccountServices {
 
 	 //This method load an account
-    public void deposit(double amount);
+    public Account deposit(Account acc, double amount);
     
     //This method operate the payement
-    public boolean charge(double amount);
-
-    public String getCardNumber();
+    public Account charge(Account acc, double amount);
     
-    public double getCurrentBalance();
+    public Account createAccount(String travAgName, String card, double initialAmount);
     
     
 }

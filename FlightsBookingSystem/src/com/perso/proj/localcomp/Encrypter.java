@@ -13,7 +13,7 @@ public class Encrypter {
    // private int mainKey;
     public Encrypter() { }
     public Encrypter(int key) {
-        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!*@#$%&?";
+        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!*@#$%&?-";
         shiftedAlphabet = alphabet.substring(key) + alphabet.substring(0, key);
        // mainKey = key;
     }

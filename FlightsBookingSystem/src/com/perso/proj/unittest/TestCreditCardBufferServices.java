@@ -3,12 +3,15 @@
  */
 package com.perso.proj.unittest;
 
-import static org.junit.Assert.assertNull;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.perso.proj.enums.EBSOperationsEnum;
 import com.perso.proj.services.servimpl.CreditCardBufferServices;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 
@@ -36,14 +39,12 @@ public class TestCreditCardBufferServices {
 
 	@Test
 	public void testSetCardCell() {
-		ccService.setCardCell(travAgName, operation, card);
-		String expResult = travAgName + "-" + operation + "-" + card;
+		ccService.setCardCell(travAgName, EBSOperationsEnum.APPLICATION, card, null, 0);
+		String result = ccService.getCardCell(1, "TA");
 
-		String result = ccService.getCardCell(1);
-
-		String result1 = ccService.getCardCell(0);
-
-		assertEquals(expResult, result);
+		String result1 = ccService.getCardCell(0, "TA");
+		
+		assertNotNull(result);
 
 		assertNull(result1);
 	}

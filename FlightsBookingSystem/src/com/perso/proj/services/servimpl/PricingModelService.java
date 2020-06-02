@@ -18,10 +18,10 @@ public class PricingModelService implements IPricingModelService{
     private HashMap<String, Integer> dailyPriceVariationRate;
     
     // Indicate the minimum price for a ticket
-    private  int MIN_PRICE = 50;
+    private  final static int MIN_PRICE = 50;
     
     // Indicates the maximum price for a ticket
-    private  int MAX_PRICE = 200;
+    private  final static int MAX_PRICE = 200;
     
     // Contains the days of a week
     private String[] weekDays;
@@ -133,7 +133,7 @@ public class PricingModelService implements IPricingModelService{
             }
             else
             {
-            	this.cutRate += 1; //with this we will have a 10% increase on the current price
+            	this.cutRate += 1; //with this we will have a 1% increase on the current price
             }
             
             if(this.currentPrice >= 200 && percTicSold < 0.5 && this.cutRate > 0) { //the price has reached its max value and we still have a lot of ticket

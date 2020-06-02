@@ -3,6 +3,7 @@
  */
 package com.perso.proj.services.servimpl;
 
+import com.perso.proj.entities.Account;
 import com.perso.proj.services.servinterface.IAccountServices;
 
 /**
@@ -10,48 +11,44 @@ import com.perso.proj.services.servinterface.IAccountServices;
  *
  */
 public class AccountServices implements IAccountServices {
-	// private String travAgName;
-	private String cardNumber;
-	private double balance;
-
-	public AccountServices(String card, double initAmount) {
-		// this.travAgName = ta;
-		this.cardNumber = card;
-		this.balance = initAmount;
+	
+	public AccountServices() {
+		
 	}
 
 	@Override
 	// This method load an account
-	public void deposit(double amount) {
-		Object b = this.balance;
-		synchronized (b) {
-			this.balance += amount;
+	public Account deposit(Account acc, double amount) {
+		synchronized (acc) {
+			double newBalance = acc.getBalance()+ amount;
+			acc.setBalance(newBalance);
 		}
+		return acc;
 	}
 
 	@Override
 	//This method operate the payement
-    public boolean charge(double amount){
-        boolean isValid = false;
-        Object b = this.balance;
-        synchronized (b) {
-            if (this.balance >= amount)
-            {
-                this.balance -= amount;
-                isValid = true;
+    public Account charge(Account acc, double amount){
+        synchronized (acc) {
+            if (acc.getBalance() >= amount){
+            	double newBalance = acc.getBalance() - amount;
+            	acc.setBalance(newBalance);
+            }else {
+            	return null;
             }
         }
-        return isValid;
+        return acc;
     }
 
 	@Override
-	public String getCardNumber() {
-		return this.cardNumber;
+	public Account createAccount(String travAgName, String card, double initialAmount){
+		Account acc = new Account();
+		acc.setOwner(travAgName);
+		acc.setCardNumber(card);
+		acc.setBalance(initialAmount);
+		return acc;
 	}
-
-	@Override
-	public double getCurrentBalance() {
-		return this.balance;
-	}
+	
+	
 
 }
