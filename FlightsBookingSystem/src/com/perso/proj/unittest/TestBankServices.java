@@ -7,7 +7,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import com.perso.proj.enums.EBSOperationsEnum;
 import com.perso.proj.services.servimpl.BankServices;
@@ -21,6 +24,7 @@ import com.perso.proj.services.servinterface.IEncryptionService;
  * @author deghislain
  *
  */
+@TestMethodOrder(OrderAnnotation.class)
 public class TestBankServices {
 	// TA:Travel Agency, BS:Bank Service, AC:Airline Company
 	static ICreditCardBufferServices ccBuffer;
@@ -43,6 +47,7 @@ public class TestBankServices {
 	}
 	
 	@Test
+	@Order(1)
 	public void testProcessCreditCardApplication() {
 		//this part test processCreditCardApplication
 		ccBuffer.setCardCell(travAgName, EBSOperationsEnum.APPLICATION, card, null, 0);//TA send the application
@@ -62,6 +67,7 @@ public class TestBankServices {
 	}
 	
 	@Test
+	@Order(2)
 	public void testChargeCreditCard() {
 		card = "2477.9582.0900.3698";//TA already have the a credit card
 		card = encrService.encrypt(card, KEY1, KEY2);
@@ -87,5 +93,21 @@ public class TestBankServices {
 		assertNotNull(confirmation);
 		
 		assertEquals("No Valid", confirmation);
+	}
+	
+	@Test
+	@Order(3)
+	public void testDeposit() {
+		card = "2477.9582.0900.3698";//TA already have the a credit card
+		card = encrService.encrypt(card, KEY1, KEY2);
+		ccBuffer.setCardCell(travAgName, EBSOperationsEnum.DEPOSIT, card, null, 500); //AC request a deposit of 500$
+		bs.runBankService(); //BS process the request
+		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");// AC get feedback from BS
+		String[] rcToken = resultCharge.split("\\-");
+		String confirmation = rcToken[3];
+		
+		assertNotNull(confirmation);
+		
+		assertEquals("Valid", confirmation);
 	}
 }

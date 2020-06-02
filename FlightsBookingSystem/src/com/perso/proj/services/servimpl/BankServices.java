@@ -65,6 +65,7 @@ public class BankServices implements IBankServices{
 	public void runBankService() {
 		 processCreditCardApplication();
 		 chargeCredCard();
+		 deposit();
 	}
 	
 	 private void processCreditCardApplication(){
@@ -142,6 +143,7 @@ public class BankServices implements IBankServices{
 							IAccountServices accServices = new AccountServices();
 							Account updatedAcc = accServices.charge(acc, amount);
 							if(null != updatedAcc) {
+								accounts.put(cardNum, updatedAcc);
 								this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "Valid", 0);
 							}else {
 								this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "No Valid", 0);
@@ -155,8 +157,33 @@ public class BankServices implements IBankServices{
 		}
 
 	
-	public void deposit() {
-		// TODO Auto-generated method stub
+	private void deposit() {
+		for (int i = 0; i < 5; i++) {
+			String cardRef = this.cardBuffer.getCardCell(i, "deposit");
+			if (cardRef != null && !cardRef.equals("")) {
+				String[] token = cardRef.split("\\-");
+				if (token.length >= 4) {
+					String operation = token[1];
+					if(operation.equals(EBSOperationsEnum.DEPOSIT.name())){
+						String cardNum = token[2];
+						double amount = Double.parseDouble(token[4]);
+						cardNum = encrService.decrypt(cardNum, KEY1, KEY2);
+						Account acc = accounts.get(cardNum);
+						
+						IAccountServices accServices = new AccountServices();
+						Account updatedAcc = accServices.deposit(acc, amount);
+						if(null != updatedAcc) {
+							accounts.put(cardNum, updatedAcc);
+							this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "Valid", 0);
+						}else {
+							this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "No Valid", 0);
+						}
+					}
+					
+				}
+			}
+
+		}
 		
 	}
 
