@@ -3,6 +3,8 @@
  */
 package com.perso.proj.entities;
 
+import java.util.Date;
+
 import com.perso.proj.enums.EOrderStatus;
 
 /**
@@ -27,6 +29,8 @@ private int amount;
 private double unitPrice;
 
 private EOrderStatus status;
+
+private String orderDate;
 
 /**
  * @return the senderId
@@ -124,6 +128,20 @@ public String getOrderId() {
  */
 public void setOrderId(String orderId) {
 	this.orderId = orderId;
+}
+
+/**
+ * @return the orderDate
+ */
+public String getOrderDate() {
+	return orderDate;
+}
+
+/**
+ * @param orderDate the orderDate to set
+ */
+public void setOrderDate(String orderDate) {
+	this.orderDate = orderDate;
 }
 
 

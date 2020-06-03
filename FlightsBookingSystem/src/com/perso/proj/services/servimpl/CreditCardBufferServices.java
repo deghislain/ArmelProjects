@@ -13,8 +13,6 @@ import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 public class CreditCardBufferServices implements ICreditCardBufferServices {
 	private String[] cardAppBuffer = new String[5];
 
-	private String[] orderConfirmBuffer = new String[5];
-
 	public CreditCardBufferServices() {
 		for (int i = 0; i < cardAppBuffer.length; i++) {
 			this.cardAppBuffer[i] = null;
@@ -23,14 +21,14 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 
 	@Override
 	// This method allows communication with the Bank
-	public void setCardCell(String travAgName, EBSOperations operation, String card, String confirmation, double amount) {
-		this.writeCardCell(travAgName, operation, card, confirmation, amount);
+	public void setCardCell(String travAgName, String orderId, EBSOperations operation, String card, double amount) {
+		this.writeCardCell(travAgName, orderId, operation, card, amount);
 	}
 
 	// setCardCell method ilplementation
-	private void writeCardCell(String travAgName, EBSOperations operation, String card, String confirmation, double amount) {
+	private void writeCardCell(String travAgName, String orderId, EBSOperations operation, String card, double amount) {
 		synchronized (this.cardAppBuffer) {
-			String status = travAgName + "-" + operation + "-" + card + "-" + confirmation + "-" + amount;
+			String status = travAgName + "-" + orderId + "-" + operation.name() + "-" + card + "-" + amount;
 			int index = Character.getNumericValue(travAgName.charAt(travAgName.length() - 1));
 			if (this.cardAppBuffer[index] == null) {
 				this.cardAppBuffer[index] = status;
@@ -51,10 +49,11 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 				status = cardAppBuffer[index];
 				String[] token = status.split("\\-");
 				if(null != token && token.length > 0) {
-					String operation = token[1];
+					String operation = token[2];
 					
-					if((operation.equals(EBSOperations.FEEDBACK.name()) 
-					 || operation.equals(EBSOperations.DELIVERY.name())) && reader.equals("getFeedBack")){
+					if((operation.equals(EBSOperations.CONFIRM.name()) 
+					 || operation.equals(EBSOperations.DELIVERY.name())
+					 || operation.equals(EBSOperations.DECLINE.name())) && reader.equals("getFeedBack")){
 						//the reading of a cell is opened but only a valid combination operation-reader(method performing reading)can consume 
 						cardAppBuffer[index] = null;
 					}else if(operation.equals(EBSOperations.CHARGE.name()) && reader.equals("charge")) {
@@ -71,45 +70,4 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 
 		return status;
 	}
-
-	@Override
-	// This method allows a Bank to confirm an order
-	public void setOrderStatus(String orderId, String senderId, boolean isConfirm) {
-		this.writeCell(orderId, senderId, isConfirm);
-	}
-
-	private void writeCell(String orderId, String senderId, boolean isConfirm) {
-		synchronized (this.orderConfirmBuffer) {
-			String status = orderId + "-" + senderId;
-			if (isConfirm) {
-				status = status + "-valid";
-			} else {
-				status = status + "-no valid";
-			}
-			int index = Character.getNumericValue(senderId.charAt(senderId.length() - 1));
-			if (this.orderConfirmBuffer[index] == null) {
-				this.orderConfirmBuffer[index] = status;
-			}
-		}
-	}
-
-	@Override
-	// This method provide the bank confirmation for an order
-	public String getOrderStatus(int index) {
-		return this.readCell(index);
-	}
-
-	private String readCell(int index) {
-		String status = null;
-		synchronized (this.orderConfirmBuffer) {
-
-			if (orderConfirmBuffer[index] != null) {
-				status = orderConfirmBuffer[index];
-				orderConfirmBuffer[index] = null;
-			}
-		}
-
-		return status;
-	}
-
 }

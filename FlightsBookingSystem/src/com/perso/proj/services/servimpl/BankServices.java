@@ -75,12 +75,12 @@ public class BankServices implements IBankServices{
                  String[] token = appRef.split("\\-");
                  if (token.length >= 2){
                      String travAgName = token[0];
-                     String operation = token[1];
+                     String operation = token[2];
                      if (operation != null && !operation.isEmpty() && operation.equals(EBSOperations.APPLICATION.name())){
                          if (this.deliveredCards[i] == null || this.deliveredCards[i].equals("")){
                              String cardNum = grantCreditCard(travAgName);
                          if (cardNum != null && !cardNum.equals("")){
-                             this.cardBuffer.setCardCell(travAgName, EBSOperations.DELIVERY, cardNum, null, 0);
+                             this.cardBuffer.setCardCell(travAgName, null , EBSOperations.DELIVERY, cardNum, 0);
                                  System.out.println("Bank deliver credit Card to " + travAgName);
                                  this.deliveredCards[i] = cardNum;
                                  break;
@@ -133,20 +133,22 @@ public class BankServices implements IBankServices{
 				if (cardRef != null && !cardRef.equals("")) {
 					String[] token = cardRef.split("\\-");
 					if (token.length >= 4) {
-						String operation = token[1];
+						String operation = token[2];
 						if(operation.equals(EBSOperations.CHARGE.name())){
-							String cardNum = token[2];
+							String cardNum = token[3];
 							double amount = Double.parseDouble(token[4]);
 							cardNum = encrService.decrypt(cardNum, KEY1, KEY2);
 							Account acc = accounts.get(cardNum);
 							
 							IAccountServices accServices = new AccountServices();
 							Account updatedAcc = accServices.charge(acc, amount);
+							String travAg = token[0];
+							String orderId = token[1];
 							if(null != updatedAcc) {
 								accounts.put(cardNum, updatedAcc);
-								this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "Valid", 0);
+								this.cardBuffer.setCardCell(travAg, orderId, EBSOperations.CONFIRM, cardNum, 0);
 							}else {
-								this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "No Valid", 0);
+								this.cardBuffer.setCardCell(travAg, orderId, EBSOperations.DECLINE, cardNum, 0);
 							}
 						}
 						
@@ -163,20 +165,21 @@ public class BankServices implements IBankServices{
 			if (cardRef != null && !cardRef.equals("")) {
 				String[] token = cardRef.split("\\-");
 				if (token.length >= 4) {
-					String operation = token[1];
+					String operation = token[2];
 					if(operation.equals(EBSOperations.DEPOSIT.name())){
-						String cardNum = token[2];
+						String cardNum = token[3];
 						double amount = Double.parseDouble(token[4]);
 						cardNum = encrService.decrypt(cardNum, KEY1, KEY2);
 						Account acc = accounts.get(cardNum);
 						
 						IAccountServices accServices = new AccountServices();
 						Account updatedAcc = accServices.deposit(acc, amount);
+						String travAg = token[0];
 						if(null != updatedAcc) {
 							accounts.put(cardNum, updatedAcc);
-							this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "Valid", 0);
+							this.cardBuffer.setCardCell(travAg, null , EBSOperations.CONFIRM, cardNum, 0);
 						}else {
-							this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "No Valid", 0);
+							this.cardBuffer.setCardCell(travAg, null , EBSOperations.DECLINE, cardNum, 0);
 						}
 					}
 					

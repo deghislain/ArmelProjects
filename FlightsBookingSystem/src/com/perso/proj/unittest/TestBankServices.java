@@ -50,20 +50,22 @@ public class TestBankServices {
 	@Order(1)
 	public void testProcessCreditCardApplication() {
 		//this part test processCreditCardApplication
-		ccBuffer.setCardCell(travAgName, EBSOperations.APPLICATION, card, null, 0);//TA send the application
+		ccBuffer.setCardCell(travAgName, null, EBSOperations.APPLICATION, card, 0);//TA send the application
 		bs.runBankService();//BS process the application
 		String resultApp = ccBuffer.getCardCell(1, "getFeedBack");//TA get the feedback of its application
 		
 		String[] token = new String[resultApp.length()];
 		token = resultApp.split("\\-");
-		card = token[2];
+		card = token[3];
 		card = encrService.decrypt(card, KEY1, KEY2);
+		
+		String feedback = token[2];
 		
 		assertNotNull(resultApp);
 		
 		assertNotNull(card);
 		
-		assertEquals(EBSOperations.DELIVERY.name(), token[1]);
+		assertEquals(EBSOperations.DELIVERY.name(), feedback);
 	}
 	
 	@Test
@@ -71,28 +73,28 @@ public class TestBankServices {
 	public void testChargeCreditCard() {
 		card = "2477.9582.0900.3698";//TA already have the a credit card
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, EBSOperations.CHARGE, card, null, 100); //AC request a payment of 100$
+		ccBuffer.setCardCell(travAgName, "orderId", EBSOperations.CHARGE, card, 100); //AC request a payment of 100$
 		bs.runBankService(); //BS process the request
 		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");// AC get feedback from BS
 		String[] rcToken = resultCharge.split("\\-");
-		String confirmation = rcToken[3];
+		String feedback = rcToken[2];
 		
-		assertNotNull(confirmation);
+		assertNotNull(feedback);
 		
-		assertEquals("Valid", confirmation);
+		assertEquals(EBSOperations.CONFIRM.name(), feedback);
 		//******************************************TEST2********************************
 		
 		card = "2477.9582.0900.3698";
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, EBSOperations.CHARGE, card, null, 1000); //a subsequent payment of 1000$ is not valid, for insufficient fund
+		ccBuffer.setCardCell(travAgName, "orderId", EBSOperations.CHARGE, card, 1000); //a subsequent payment of 1000$ is not valid, for insufficient fund
 		bs.runBankService(); 
-		resultCharge = ccBuffer.getCardCell(1, "getFeedBack");
+		resultCharge = ccBuffer.getCardCell(1, "getFeedBack");;
 		rcToken = resultCharge.split("\\-");
-		confirmation = rcToken[3];
+		feedback = rcToken[2];
 		
-		assertNotNull(confirmation);
+		assertNotNull(feedback);
 		
-		assertEquals("No Valid", confirmation);
+		assertEquals(EBSOperations.DECLINE.name(), feedback);
 	}
 	
 	@Test
@@ -100,14 +102,14 @@ public class TestBankServices {
 	public void testDeposit() {
 		card = "2477.9582.0900.3698";//TA already have the a credit card
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, EBSOperations.DEPOSIT, card, null, 500); //AC request a deposit of 500$
+		ccBuffer.setCardCell(travAgName, null, EBSOperations.DEPOSIT, card, 500); //AC request a deposit of 500$
 		bs.runBankService(); //BS process the request
-		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");// AC get feedback from BS
+		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");;// AC get feedback from BS
 		String[] rcToken = resultCharge.split("\\-");
-		String confirmation = rcToken[3];
+		String confirmation = rcToken[2];
 		
 		assertNotNull(confirmation);
 		
-		assertEquals("Valid", confirmation);
+		assertEquals(EBSOperations.CONFIRM.name(), confirmation);
 	}
 }

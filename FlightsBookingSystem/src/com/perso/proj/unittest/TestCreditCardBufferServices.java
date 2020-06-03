@@ -22,10 +22,10 @@ import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 public class TestCreditCardBufferServices {
 	ICreditCardBufferServices ccService;
 	String travAgName;
-	String operation;
+	//String operation;
 	String card;
 	String orderId;
-	boolean isConfirm;
+	EBSOperations feedback;
 
 	@BeforeEach
 	public void setUp() {
@@ -34,12 +34,12 @@ public class TestCreditCardBufferServices {
 		card = "2453-9512-0000-3698";
 
 		orderId = "order1";
-		isConfirm = true;
+		
 	}
 
 	@Test
 	public void testSetCardCell() {
-		ccService.setCardCell(travAgName, EBSOperations.APPLICATION, card, null, 0);
+		ccService.setCardCell(travAgName, null, EBSOperations.APPLICATION, card, 0);
 		String result = ccService.getCardCell(1, "TA");
 
 		String result1 = ccService.getCardCell(0, "TA");
@@ -51,21 +51,20 @@ public class TestCreditCardBufferServices {
 	
 	@Test
 	public void testSetOrderStatus() {
-		ccService.setOrderStatus(orderId, travAgName, isConfirm);
-		String expResult11 = orderId + "-" + travAgName +"-valid";
-		String result11 = ccService.getOrderStatus(1);
-		String result21 = ccService.getOrderStatus(2);
+		ccService.setCardCell(travAgName, orderId, EBSOperations.CONFIRM, card, 0);
+		String expResult11 = travAgName + "-" + orderId + "-" + EBSOperations.CONFIRM.name() + "-" + card + "-" + 0.0;
+		String result11 = ccService.getCardCell(1, "getFeedBack");
+		String result21 = ccService.getCardCell(1, "getFeedBack");
 
 		assertEquals(expResult11, result11);
 
 		assertNull(result21);
 		
-		isConfirm = false;
-		ccService.setOrderStatus(orderId, travAgName, isConfirm);
-		String expResult21 = orderId + "-" + travAgName + "-no valid";
-		String result211 = ccService.getOrderStatus(1);
-		String result22 = ccService.getOrderStatus(2);
-
+		feedback = EBSOperations.DECLINE;
+		ccService.setCardCell(travAgName, orderId, EBSOperations.DECLINE, card, 0);
+		String expResult21 = travAgName + "-" + orderId + "-" + EBSOperations.DECLINE + "-" + card + "-" + 0.0;
+		String result211 = ccService.getCardCell(1, "getFeedBack");
+		String result22 = ccService.getCardCell(1, "getFeedBack");
 		assertEquals(expResult21, result211);
 
 		assertNull(result22);
