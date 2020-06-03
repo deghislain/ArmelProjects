@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.perso.proj.enums.EBSOperationsEnum;
+import com.perso.proj.enums.EBSOperations;
 import com.perso.proj.services.servimpl.BankServices;
 import com.perso.proj.services.servimpl.CreditCardBufferServices;
 import com.perso.proj.services.servimpl.EncryptionService;
@@ -50,7 +50,7 @@ public class TestBankServices {
 	@Order(1)
 	public void testProcessCreditCardApplication() {
 		//this part test processCreditCardApplication
-		ccBuffer.setCardCell(travAgName, EBSOperationsEnum.APPLICATION, card, null, 0);//TA send the application
+		ccBuffer.setCardCell(travAgName, EBSOperations.APPLICATION, card, null, 0);//TA send the application
 		bs.runBankService();//BS process the application
 		String resultApp = ccBuffer.getCardCell(1, "getFeedBack");//TA get the feedback of its application
 		
@@ -63,7 +63,7 @@ public class TestBankServices {
 		
 		assertNotNull(card);
 		
-		assertEquals(EBSOperationsEnum.DELIVERY.name(), token[1]);
+		assertEquals(EBSOperations.DELIVERY.name(), token[1]);
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ public class TestBankServices {
 	public void testChargeCreditCard() {
 		card = "2477.9582.0900.3698";//TA already have the a credit card
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, EBSOperationsEnum.CHARGE, card, null, 100); //AC request a payment of 100$
+		ccBuffer.setCardCell(travAgName, EBSOperations.CHARGE, card, null, 100); //AC request a payment of 100$
 		bs.runBankService(); //BS process the request
 		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");// AC get feedback from BS
 		String[] rcToken = resultCharge.split("\\-");
@@ -84,7 +84,7 @@ public class TestBankServices {
 		
 		card = "2477.9582.0900.3698";
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, EBSOperationsEnum.CHARGE, card, null, 1000); //a subsequent payment of 1000$ is not valid, for insufficient fund
+		ccBuffer.setCardCell(travAgName, EBSOperations.CHARGE, card, null, 1000); //a subsequent payment of 1000$ is not valid, for insufficient fund
 		bs.runBankService(); 
 		resultCharge = ccBuffer.getCardCell(1, "getFeedBack");
 		rcToken = resultCharge.split("\\-");
@@ -100,7 +100,7 @@ public class TestBankServices {
 	public void testDeposit() {
 		card = "2477.9582.0900.3698";//TA already have the a credit card
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, EBSOperationsEnum.DEPOSIT, card, null, 500); //AC request a deposit of 500$
+		ccBuffer.setCardCell(travAgName, EBSOperations.DEPOSIT, card, null, 500); //AC request a deposit of 500$
 		bs.runBankService(); //BS process the request
 		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");// AC get feedback from BS
 		String[] rcToken = resultCharge.split("\\-");

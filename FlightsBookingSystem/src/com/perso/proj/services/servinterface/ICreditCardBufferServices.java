@@ -3,7 +3,7 @@
  */
 package com.perso.proj.services.servinterface;
 
-import com.perso.proj.enums.EBSOperationsEnum;
+import com.perso.proj.enums.EBSOperations;
 
 /**
  * @author deghislain
@@ -11,7 +11,7 @@ import com.perso.proj.enums.EBSOperationsEnum;
  */
 public interface ICreditCardBufferServices {
 
-	public void setCardCell(String travAgName, EBSOperationsEnum operation, String card, String confirmation, double amount);
+	public void setCardCell(String travAgName, EBSOperations operation, String card, String confirmation, double amount);
 	
     public String getCardCell(int index, String reader);
     

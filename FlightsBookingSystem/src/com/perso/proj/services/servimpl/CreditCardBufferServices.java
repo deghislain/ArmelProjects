@@ -3,7 +3,7 @@
  */
 package com.perso.proj.services.servimpl;
 
-import com.perso.proj.enums.EBSOperationsEnum;
+import com.perso.proj.enums.EBSOperations;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 
 /**
@@ -22,14 +22,13 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 	}
 
 	@Override
-	// This method allows a Travel Agency to apply for a credit card and obtain a
-	// response from the Bank
-	public void setCardCell(String travAgName, EBSOperationsEnum operation, String card, String confirmation, double amount) {
+	// This method allows communication with the Bank
+	public void setCardCell(String travAgName, EBSOperations operation, String card, String confirmation, double amount) {
 		this.writeCardCell(travAgName, operation, card, confirmation, amount);
 	}
 
 	// setCardCell method ilplementation
-	private void writeCardCell(String travAgName, EBSOperationsEnum operation, String card, String confirmation, double amount) {
+	private void writeCardCell(String travAgName, EBSOperations operation, String card, String confirmation, double amount) {
 		synchronized (this.cardAppBuffer) {
 			String status = travAgName + "-" + operation + "-" + card + "-" + confirmation + "-" + amount;
 			int index = Character.getNumericValue(travAgName.charAt(travAgName.length() - 1));
@@ -40,8 +39,7 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 	}
 
 	@Override
-	// This method allows a Travel Agency(TA) to receive an answer for a credit card
-	// application and a bank to receive credit card application from TA
+	// This method allows communication with the Bank
 	public String getCardCell(int index, String reader) {
 		return this.readCardCell(index, reader);
 	}
@@ -55,14 +53,15 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 				if(null != token && token.length > 0) {
 					String operation = token[1];
 					
-					if((operation.equals(EBSOperationsEnum.FEEDBACK.name()) 
-					 || operation.equals(EBSOperationsEnum.DELIVERY.name())) && reader.equals("getFeedBack")){
+					if((operation.equals(EBSOperations.FEEDBACK.name()) 
+					 || operation.equals(EBSOperations.DELIVERY.name())) && reader.equals("getFeedBack")){
+						//the reading of a cell is opened but only a valid combination operation-reader(method performing reading)can consume 
 						cardAppBuffer[index] = null;
-					}else if(operation.equals(EBSOperationsEnum.CHARGE.name()) && reader.equals("charge")) {
+					}else if(operation.equals(EBSOperations.CHARGE.name()) && reader.equals("charge")) {
 						cardAppBuffer[index] = null;
-					}else if(operation.equals(EBSOperationsEnum.DEPOSIT.name()) && reader.equals("deposit")) {
+					}else if(operation.equals(EBSOperations.DEPOSIT.name()) && reader.equals("deposit")) {
 						cardAppBuffer[index] = null;
-					}else if(operation.equals(EBSOperationsEnum.APPLICATION.name()) && reader.equals("process")) {
+					}else if(operation.equals(EBSOperations.APPLICATION.name()) && reader.equals("process")) {
 						cardAppBuffer[index] = null;
 					}
 				}
@@ -74,7 +73,7 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 	}
 
 	@Override
-	// This method allows a Bank to confirm a order
+	// This method allows a Bank to confirm an order
 	public void setOrderStatus(String orderId, String senderId, boolean isConfirm) {
 		this.writeCell(orderId, senderId, isConfirm);
 	}

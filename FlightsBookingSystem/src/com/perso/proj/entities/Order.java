@@ -3,11 +3,14 @@
  */
 package com.perso.proj.entities;
 
+import com.perso.proj.enums.EOrderStatus;
+
 /**
  * @author deghislain
  *
  */
-public class Orders { 
+public class Order {
+private String orderId;
 //Indicates the id of the travel agency placing the order
 private String senderId;
 
@@ -22,6 +25,8 @@ private int amount;
 
 //Indicates the price of a single ticket received from Airlines companies
 private double unitPrice;
+
+private EOrderStatus status;
 
 /**
  * @return the senderId
@@ -93,11 +98,33 @@ public void setUnitPrice(double unitPrice) {
 	this.unitPrice = unitPrice;
 }
 
+/**
+ * @return the status
+ */
+public EOrderStatus getStatus() {
+	return status;
+}
 
+/**
+ * @param status the status to set
+ */
+public void setStatus(EOrderStatus status) {
+	this.status = status;
+}
 
+/**
+ * @return the orderId
+ */
+public String getOrderId() {
+	return orderId;
+}
 
-
-
+/**
+ * @param orderId the orderId to set
+ */
+public void setOrderId(String orderId) {
+	this.orderId = orderId;
+}
 
 
 }

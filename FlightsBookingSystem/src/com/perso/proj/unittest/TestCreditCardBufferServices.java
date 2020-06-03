@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.perso.proj.enums.EBSOperationsEnum;
+import com.perso.proj.enums.EBSOperations;
 import com.perso.proj.services.servimpl.CreditCardBufferServices;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 
@@ -39,7 +39,7 @@ public class TestCreditCardBufferServices {
 
 	@Test
 	public void testSetCardCell() {
-		ccService.setCardCell(travAgName, EBSOperationsEnum.APPLICATION, card, null, 0);
+		ccService.setCardCell(travAgName, EBSOperations.APPLICATION, card, null, 0);
 		String result = ccService.getCardCell(1, "TA");
 
 		String result1 = ccService.getCardCell(0, "TA");

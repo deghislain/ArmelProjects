@@ -7,7 +7,7 @@ package com.perso.proj.enums;
  * @author deghislain
  *
  */
-public enum EBSOperationsEnum {
+public enum EBSOperations {
 	APPLICATION,
 	DEPOSIT,
 	CHARGE,

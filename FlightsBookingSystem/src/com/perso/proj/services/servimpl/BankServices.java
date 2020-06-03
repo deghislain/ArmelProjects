@@ -6,7 +6,7 @@ package com.perso.proj.services.servimpl;
 import java.util.Hashtable;
 
 import com.perso.proj.entities.Account;
-import com.perso.proj.enums.EBSOperationsEnum;
+import com.perso.proj.enums.EBSOperations;
 import com.perso.proj.services.servinterface.IAccountServices;
 import com.perso.proj.services.servinterface.IBankServices;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
@@ -76,11 +76,11 @@ public class BankServices implements IBankServices{
                  if (token.length >= 2){
                      String travAgName = token[0];
                      String operation = token[1];
-                     if (operation != null && !operation.isEmpty() && operation.equals(EBSOperationsEnum.APPLICATION.name())){
+                     if (operation != null && !operation.isEmpty() && operation.equals(EBSOperations.APPLICATION.name())){
                          if (this.deliveredCards[i] == null || this.deliveredCards[i].equals("")){
                              String cardNum = grantCreditCard(travAgName);
                          if (cardNum != null && !cardNum.equals("")){
-                             this.cardBuffer.setCardCell(travAgName, EBSOperationsEnum.DELIVERY, cardNum, null, 0);
+                             this.cardBuffer.setCardCell(travAgName, EBSOperations.DELIVERY, cardNum, null, 0);
                                  System.out.println("Bank deliver credit Card to " + travAgName);
                                  this.deliveredCards[i] = cardNum;
                                  break;
@@ -134,7 +134,7 @@ public class BankServices implements IBankServices{
 					String[] token = cardRef.split("\\-");
 					if (token.length >= 4) {
 						String operation = token[1];
-						if(operation.equals(EBSOperationsEnum.CHARGE.name())){
+						if(operation.equals(EBSOperations.CHARGE.name())){
 							String cardNum = token[2];
 							double amount = Double.parseDouble(token[4]);
 							cardNum = encrService.decrypt(cardNum, KEY1, KEY2);
@@ -144,9 +144,9 @@ public class BankServices implements IBankServices{
 							Account updatedAcc = accServices.charge(acc, amount);
 							if(null != updatedAcc) {
 								accounts.put(cardNum, updatedAcc);
-								this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "Valid", 0);
+								this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "Valid", 0);
 							}else {
-								this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "No Valid", 0);
+								this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "No Valid", 0);
 							}
 						}
 						
@@ -164,7 +164,7 @@ public class BankServices implements IBankServices{
 				String[] token = cardRef.split("\\-");
 				if (token.length >= 4) {
 					String operation = token[1];
-					if(operation.equals(EBSOperationsEnum.DEPOSIT.name())){
+					if(operation.equals(EBSOperations.DEPOSIT.name())){
 						String cardNum = token[2];
 						double amount = Double.parseDouble(token[4]);
 						cardNum = encrService.decrypt(cardNum, KEY1, KEY2);
@@ -174,9 +174,9 @@ public class BankServices implements IBankServices{
 						Account updatedAcc = accServices.deposit(acc, amount);
 						if(null != updatedAcc) {
 							accounts.put(cardNum, updatedAcc);
-							this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "Valid", 0);
+							this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "Valid", 0);
 						}else {
-							this.cardBuffer.setCardCell(token[0], EBSOperationsEnum.FEEDBACK, cardNum, "No Valid", 0);
+							this.cardBuffer.setCardCell(token[0], EBSOperations.FEEDBACK, cardNum, "No Valid", 0);
 						}
 					}
 					
