@@ -52,7 +52,7 @@ public class TestBankServices {
 		//this part test processCreditCardApplication
 		ccBuffer.setCardCell(travAgName, null, EBSOperations.APPLICATION, card, 0);//TA send the application
 		bs.runBankService();//BS process the application
-		String resultApp = ccBuffer.getCardCell(1, "getFeedBack");//TA get the feedback of its application
+		String resultApp = ccBuffer.getCardCell(1, "TA");//TA get the feedback of its application
 		
 		String[] token = new String[resultApp.length()];
 		token = resultApp.split("\\-");
@@ -75,7 +75,7 @@ public class TestBankServices {
 		card = encrService.encrypt(card, KEY1, KEY2);
 		ccBuffer.setCardCell(travAgName, "orderId", EBSOperations.CHARGE, card, 100); //AC request a payment of 100$
 		bs.runBankService(); //BS process the request
-		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");// AC get feedback from BS
+		String resultCharge = ccBuffer.getCardCell(1, "AC");// AC get feedback from BS
 		String[] rcToken = resultCharge.split("\\-");
 		String feedback = rcToken[2];
 		
@@ -88,7 +88,7 @@ public class TestBankServices {
 		card = encrService.encrypt(card, KEY1, KEY2);
 		ccBuffer.setCardCell(travAgName, "orderId", EBSOperations.CHARGE, card, 1000); //a subsequent payment of 1000$ is not valid, for insufficient fund
 		bs.runBankService(); 
-		resultCharge = ccBuffer.getCardCell(1, "getFeedBack");;
+		resultCharge = ccBuffer.getCardCell(1, "AC");;
 		rcToken = resultCharge.split("\\-");
 		feedback = rcToken[2];
 		
@@ -102,14 +102,14 @@ public class TestBankServices {
 	public void testDeposit() {
 		card = "2477.9582.0900.3698";//TA already have the a credit card
 		card = encrService.encrypt(card, KEY1, KEY2);
-		ccBuffer.setCardCell(travAgName, null, EBSOperations.DEPOSIT, card, 500); //AC request a deposit of 500$
+		ccBuffer.setCardCell(travAgName, null, EBSOperations.DEPOSIT, card, 500); // TA request a deposit of 500$
 		bs.runBankService(); //BS process the request
-		String resultCharge = ccBuffer.getCardCell(1, "getFeedBack");;// AC get feedback from BS
+		String resultCharge = ccBuffer.getCardCell(1, "TA");// AC get feedback from BS
 		String[] rcToken = resultCharge.split("\\-");
 		String confirmation = rcToken[2];
 		
 		assertNotNull(confirmation);
 		
-		assertEquals(EBSOperations.CONFIRM.name(), confirmation);
+		assertEquals(EBSOperations.FEEDBACK.name(), confirmation);
 	}
 }

@@ -43,7 +43,8 @@ public class TestPricingModel {
 		double curPrice = 0;
 		int count = 15;
 		while(count-- >0) {
-			pm.runPricingModel(numOrRecAtLPC, numOrderRecsinceLPC,  numAvailableTick, dateInitSale);
+			pm.updateSalesData(this.numOrRecAtLPC, this.numOrderRecsinceLPC, count, dateInitSale);
+			pm.runPricingModel();
 			numAvailableTick -= 20;
 			numOrderRecsinceLPC += 5;
 			numOrRecAtLPC += 3;

@@ -10,10 +10,12 @@ import java.util.Date;
  *
  */
 public interface IPricingModelService {
-	void runPricingModel(int numOrRecBefLPC, int numOrdRecSinceLPC, int numAvailableTick, Date dateInitSale);
+	void runPricingModel();
 	
 	//return the current price of a ticket
 	public double getTicketCurrentPrice();
 
     public float getCurrentCutRate();
+    
+    public void updateSalesData(int numOrdRecAtLPC, int numOrdRecSinceLPC, int numAvailableTick, Date dateInitSale);
 }

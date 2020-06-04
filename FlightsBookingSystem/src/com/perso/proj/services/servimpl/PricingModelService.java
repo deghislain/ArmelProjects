@@ -45,17 +45,13 @@ public class PricingModelService implements IPricingModelService{
     private int numOrderRecSinceLPC;
     
     //Indicates the number of orders receive by the Airline company befor the last price cut
-    private int numOrRecAtLPC;
+    private int numOrdRecAtLPC;
 
     //Indicates when the Airline start selling ticket
     private Date dateInitSale;
     
     //Indicates a min random value used to simulate a random evolution of a price
     private int minRandomVal;
-    
-    public PricingModelService() {
-    	
-    }
     
     public PricingModelService(int initStockTicket)
     {
@@ -74,16 +70,16 @@ public class PricingModelService implements IPricingModelService{
         this.initStockTicket = initStockTicket;
         this.numAvailableTick = initStockTicket;
         this.numOrderRecSinceLPC = 0;
-        this.numOrRecAtLPC = 0;
+        this.numOrdRecAtLPC = 0;
         this.dateInitSale = new Date();
         this.minRandomVal = 0;
     }
     
    @Override
-	public void runPricingModel(int numOrRecAtLPC, int numOrdRecSinceLPC, int numAvailableTick, Date dateInitSale) {
-		this.updateSalesData(numOrRecAtLPC, numOrdRecSinceLPC, numAvailableTick, dateInitSale);
+	public void runPricingModel() {
+		//this.updateSalesData(numOrdRecAtLPC, numOrdRecSinceLPC, numAvailableTick, dateInitSale);
+	    this.calculateCutRate();
 		this.updateCurrentPrice();
-		this.calculateCutRate();
 	}
    
     
@@ -92,10 +88,10 @@ public class PricingModelService implements IPricingModelService{
     {
     	  float percTicSold = 0;
     	  int numTicketSold = 0;
-    	System.out.println("printed from calculateCutRate" + this.cutRate);
+    	
     	//float newRate =0;
         //The price cut has not happen yet, and the number of ticket sold is too low
-        if (numOrderRecSinceLPC == 0 && numOrRecAtLPC == 0)
+        if (numOrderRecSinceLPC == 0 && numOrdRecAtLPC == 0)
         {
             //Here we estimate for how long the company have been selling ticket 
             float saleTime = 1f*(new Date().getTime() - dateInitSale.getTime())/1000;
@@ -117,7 +113,7 @@ public class PricingModelService implements IPricingModelService{
             	this.cutRate += 5; //with this we will have a 5% increase on the current price
             }
         }//The price cut has already happen at least once
-        else if (this.numOrderRecSinceLPC != 0 && this.numOrRecAtLPC != 0)
+        else if (this.numOrderRecSinceLPC != 0 && this.numOrdRecAtLPC != 0)
         {
         	//Here we calculate the percentage of ticket sold during the saleTime
             if( this.initStockTicket != this.numAvailableTick) {
@@ -125,7 +121,7 @@ public class PricingModelService implements IPricingModelService{
             	 percTicSold = (numTicketSold*1f / this.initStockTicket);
             }
             // Here we estimate the growth of orders since the last price cut 
-            float perOrderGrowthSinceLPC = 1f *this.numOrderRecSinceLPC / (this.numOrRecAtLPC + this.numOrderRecSinceLPC);
+            float perOrderGrowthSinceLPC = 1f *this.numOrderRecSinceLPC / (this.numOrdRecAtLPC + this.numOrderRecSinceLPC);
 
             if (perOrderGrowthSinceLPC < 0.4)
             {
@@ -176,11 +172,11 @@ public class PricingModelService implements IPricingModelService{
 
 	
 	//This method implement updateTicketPrice
-    private void updateSalesData(int numOrRecAtLPC, int numOrdRecSinceLPC, int numAvailableTick, Date dateInitSale)
+    public void updateSalesData(int numOrdRecAtLPC, int numOrdRecSinceLPC, int numAvailableTick, Date dateInitSale)
     { 
         this.numAvailableTick = numAvailableTick;
         this.numOrderRecSinceLPC = numOrdRecSinceLPC;
-        this.numOrRecAtLPC = numOrRecAtLPC;
+        this.numOrdRecAtLPC = numOrdRecAtLPC;
         this.dateInitSale = dateInitSale;
         //calculateTicketPrice();
     }

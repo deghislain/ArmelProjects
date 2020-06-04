@@ -53,8 +53,8 @@ public class TestCreditCardBufferServices {
 	public void testSetOrderStatus() {
 		ccService.setCardCell(travAgName, orderId, EBSOperations.CONFIRM, card, 0);
 		String expResult11 = travAgName + "-" + orderId + "-" + EBSOperations.CONFIRM.name() + "-" + card + "-" + 0.0;
-		String result11 = ccService.getCardCell(1, "getFeedBack");
-		String result21 = ccService.getCardCell(1, "getFeedBack");
+		String result11 = ccService.getCardCell(1, "AC");
+		String result21 = ccService.getCardCell(1, "AC");
 
 		assertEquals(expResult11, result11);
 
@@ -63,8 +63,8 @@ public class TestCreditCardBufferServices {
 		feedback = EBSOperations.DECLINE;
 		ccService.setCardCell(travAgName, orderId, EBSOperations.DECLINE, card, 0);
 		String expResult21 = travAgName + "-" + orderId + "-" + EBSOperations.DECLINE + "-" + card + "-" + 0.0;
-		String result211 = ccService.getCardCell(1, "getFeedBack");
-		String result22 = ccService.getCardCell(1, "getFeedBack");
+		String result211 = ccService.getCardCell(1, "AC");
+		String result22 = ccService.getCardCell(1, "AC");
 		assertEquals(expResult21, result211);
 
 		assertNull(result22);

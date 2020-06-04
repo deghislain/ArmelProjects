@@ -27,13 +27,14 @@ public class MultiCellBufferServices implements IMultiCellBufferServices {
 	
 	//This method implements the setOneCell method
 	private void writeOneCell(Order o) {
-		while (countNumEmptyCells() == 0) {
+		//TODO uncomment the while after test
+		/*while (countNumEmptyCells() == 0) {
 			try {
 				this.wait();// if no empty cell, we wait
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		synchronized (this.buffer) {
 			for (int i = 0; i < buffer.length; i++) {
 				if (buffer[i] == null) {
@@ -43,7 +44,7 @@ public class MultiCellBufferServices implements IMultiCellBufferServices {
 
 			}
 		}
-		this.notify();
+		//this.notify();
 	}
 
 	@Override
@@ -55,14 +56,14 @@ public class MultiCellBufferServices implements IMultiCellBufferServices {
 	//This method implements the readCell method
 	public Order readOneCell() {
 		Order myOrder = null;
-
-		while (countNumEmptyCells() == 3) {
+		//TODO uncomment the while after test
+		/*while (countNumEmptyCells() == 3) {
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		synchronized (this.buffer) {
 			for (int j = 0; j < buffer.length; j++) {
 				if (buffer[j] != null) {
@@ -73,7 +74,7 @@ public class MultiCellBufferServices implements IMultiCellBufferServices {
 			}
 		}
 		
-		this.notify();
+		//notify();
 		return myOrder;
 	}
 

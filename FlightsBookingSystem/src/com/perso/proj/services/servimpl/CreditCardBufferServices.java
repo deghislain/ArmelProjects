@@ -48,23 +48,25 @@ public class CreditCardBufferServices implements ICreditCardBufferServices {
 			if (cardAppBuffer[index] != null && !cardAppBuffer[index].equals("")) {
 				status = cardAppBuffer[index];
 				String[] token = status.split("\\-");
-				if(null != token && token.length > 0) {
+				if (null != token && token.length > 0) {
 					String operation = token[2];
-					
-					if((operation.equals(EBSOperations.CONFIRM.name()) 
-					 || operation.equals(EBSOperations.DELIVERY.name())
-					 || operation.equals(EBSOperations.DECLINE.name())) && reader.equals("getFeedBack")){
-						//the reading of a cell is opened but only a valid combination operation-reader(method performing reading)can consume 
+					// TODO improvement needed here
+					// the reading of a cell is opened but only a valid combination
+					// operation-reader(method performing reading)can consume
+					if ((operation.equals(EBSOperations.CONFIRM.name())
+							|| operation.equals(EBSOperations.DECLINE.name())) && reader.equals("AC")) {// messages consumed by AC
 						cardAppBuffer[index] = null;
-					}else if(operation.equals(EBSOperations.CHARGE.name()) && reader.equals("charge")) {
+					} else if ((operation.equals(EBSOperations.CHARGE.name())
+							|| operation.equals(EBSOperations.DEPOSIT.name())
+							|| operation.equals(EBSOperations.APPLICATION.name())) && reader.equals("Bank")) {// messages consumed by bank																																						// Bank
 						cardAppBuffer[index] = null;
-					}else if(operation.equals(EBSOperations.DEPOSIT.name()) && reader.equals("deposit")) {
-						cardAppBuffer[index] = null;
-					}else if(operation.equals(EBSOperations.APPLICATION.name()) && reader.equals("process")) {
+					} else if ((operation.equals(EBSOperations.FEEDBACK.name())
+							|| operation.equals(EBSOperations.DELIVERY.name())
+							|| operation.equals(EBSOperations.FEEDBACK_NO.name())) && reader.equals("TA")) { // messages consumed by TA
 						cardAppBuffer[index] = null;
 					}
 				}
-				
+
 			}
 		}
 
