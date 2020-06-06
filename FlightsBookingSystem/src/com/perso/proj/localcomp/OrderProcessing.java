@@ -9,7 +9,7 @@ import com.perso.proj.enums.EOrderStatus;
 import com.perso.proj.services.servinterface.IBankServices;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 import com.perso.proj.services.servinterface.IPricingModelService;
-import com.perso.proj.utils.DateUtils;
+import com.perso.proj.utils.UtilityClass;
 
 /**
  * @author deghislain
@@ -40,7 +40,7 @@ public class OrderProcessing implements Runnable {
 		calculateTotalAmount();
 		makePaymentRequest();
 		printOrder();
-		//sendFeedbackToTA();
+		sendFeedbackToTA();
 		this.bankService.runBankService();
 		
 	}
@@ -65,14 +65,14 @@ public class OrderProcessing implements Runnable {
 
 	// This method print the result of the order processing
 	private void printOrder() {
-		System.out.printf("%-10s %-10s %-10s %-10s %-10s %n", "OrderId: " + this.myOrder.getOrderId(), "| Order Date: " + this.myOrder.getOrderDate(),
-				"| Ordered By: " + this.myOrder.getSenderId(), "| Total Charges: " + this.calculateTotalAmount(), "| Order Processed at: " + DateUtils.getCurrentTime());
+		System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s %n", "OrderId: " + this.myOrder.getOrderId(), "| Order Date: " + this.myOrder.getOrderDate(),
+				"| Ordered By: " + this.myOrder.getSenderId(),"| Amount: " + this.myOrder.getAmount(),"| Unit Price: " + this.myOrder.getUnitPrice(), "| Total Charges: " + this.calculateTotalAmount(), "| Order Processed at: " + UtilityClass.getCurrentTime());
 	}
 
 	// This method notify The TA about the outcome of the current order processing
-	/*private void sendFeedbackToTA() {
-		 this.ccBufferServices.setCardCell(this.myOrder.getSenderId(), this.myOrder.getOrderId() , EBSOperations.FEEDBACK, this.myOrder.getCreditCardNumber(), this.myOrder.getAmount());
-	}*/
+	private void sendFeedbackToTA() {
+		 this.ccBufferServices.setCardCell(this.myOrder.getSenderId(), this.myOrder.getOrderId() , EBSOperations.FEEDBACK_P, this.myOrder.getCreditCardNumber(), this.myOrder.getAmount());
+	}
 
 	
 }

@@ -14,6 +14,7 @@ public enum EBSOperations {
 	DELIVERY("REQUESTED DELIVERY OPERATION"), 
 	FEEDBACK("VALID"), //successful payment
 	FEEDBACK_NO("NO VALID"),// payment did not went through
+	FEEDBACK_P("PROCESSED"),//order successfully processed waiting for bank payment aproval
 	CONFIRM("VALID"),
 	DECLINE("NO VALID");
 	

@@ -47,7 +47,7 @@ public class BankServices implements IBankServices {
 		this.cards.put("2477.9582.0900.3698", "NOT_ASSIGNED");
 		this.cards.put("2977.9562.0400.3618", "NOT_ASSIGNED");
 
-		this.cardInitialAmount = 1000;
+		this.cardInitialAmount = 100000;
 
 		this.accounts = new Hashtable<String, Account>();
 
@@ -81,15 +81,12 @@ public class BankServices implements IBankServices {
 					if (token.length >= 2) {
 						orderId = token[1];
 					}
-					if (token.length >= 2) {
+					if (token.length >= 3) {
 						operation = token[2];
 					}
 
-					if (token.length >= 3) {
+					if (token.length >= 4) {
 						cardNum = token[3];
-					}
-
-					if (token.length >= 3) {
 						amount = Double.parseDouble(token[4]);
 					}
 
@@ -121,7 +118,7 @@ public class BankServices implements IBankServices {
 			String cardNum = grantCreditCard(travAgName);
 			if (cardNum != null && !cardNum.equals("")) {
 				this.cardBuffer.setCardCell(travAgName, null, EBSOperations.DELIVERY, cardNum, 0);
-				System.out.println("Bank deliver credit Card to " + travAgName);
+				System.out.println("Bank deliver credit Card "+ cardNum + " to " + travAgName);
 				this.deliveredCards[index] = cardNum;
 			}
 		}
@@ -175,13 +172,16 @@ public class BankServices implements IBankServices {
 	private void deposit(String travAg, String cardNum, double amount) {
 		cardNum = encrService.decrypt(cardNum, KEY1, KEY2);
 		Account acc = accounts.get(cardNum);
-		IAccountServices accServices = new AccountServices();
-		Account updatedAcc = accServices.deposit(acc, amount);
-		if (null != updatedAcc) {
-			accounts.put(cardNum, updatedAcc);
-			this.cardBuffer.setCardCell(travAg, null, EBSOperations.FEEDBACK, cardNum, 0);
-		} else {
-			this.cardBuffer.setCardCell(travAg, null, EBSOperations.FEEDBACK_NO, cardNum, 0);
+		if(acc != null) {
+			IAccountServices accServices = new AccountServices();
+			Account updatedAcc = accServices.deposit(acc, amount);
+			if (null != updatedAcc) {
+				accounts.put(cardNum, updatedAcc);
+				this.cardBuffer.setCardCell(travAg, null, EBSOperations.FEEDBACK, cardNum, 0);
+			} else {
+				this.cardBuffer.setCardCell(travAg, null, EBSOperations.FEEDBACK_NO, cardNum, 0);
+			}
 		}
+		
 	}
 }

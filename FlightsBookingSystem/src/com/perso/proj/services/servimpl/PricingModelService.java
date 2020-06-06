@@ -27,7 +27,7 @@ public class PricingModelService implements IPricingModelService{
     private String[] weekDays;
     
   //Indicate the current price
-    private double currentPrice;
+    private double CURRENT_PRICE = 50;
 
     //Indicates a specific week day
     private String weekDay;
@@ -64,7 +64,6 @@ public class PricingModelService implements IPricingModelService{
         this.dailyPriceVariationRate.put("Saturday", 8);
         this.dailyPriceVariationRate.put("Sunday", 10);
         this.weekDays = new String[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-        this.currentPrice = 50;
         this.weekDay = "Sunday";
         this.cutRate = 0;
         this.initStockTicket = initStockTicket;
@@ -132,11 +131,10 @@ public class PricingModelService implements IPricingModelService{
             	this.cutRate += 1; //with this we will have a 1% increase on the current price
             }
             
-            if(this.currentPrice >= 200 && percTicSold < 0.5 && this.cutRate > 0) { //the price has reached its max value and we still have a lot of ticket
+            if(CURRENT_PRICE >= 200 && percTicSold < 0.8 && this.cutRate > 0) { //the price has reached its max value and we still have a lot of ticket
             	this.cutRate -= 10;
             }
         }
-        
     }
     
     // This method initialize the ticket price based on the week day
@@ -153,7 +151,7 @@ public class PricingModelService implements IPricingModelService{
         this.weekDay = weekDays[indexDay];
         int dailyRate = this.dailyPriceVariationRate.get(this.weekDay);
        
-        double currPrice = this.currentPrice;
+        double currPrice = CURRENT_PRICE;
         currPrice = currPrice + (currPrice * dailyRate) / 100;
         currPrice = currPrice + currPrice * this.cutRate;
 
@@ -166,7 +164,7 @@ public class PricingModelService implements IPricingModelService{
         {
             currPrice = MAX_PRICE;
         }
-        this.currentPrice = currPrice;
+        CURRENT_PRICE = currPrice;
        
     }
 
@@ -183,16 +181,12 @@ public class PricingModelService implements IPricingModelService{
 
 	@Override
 	public double getTicketCurrentPrice() {
-		return this.currentPrice;
+		return CURRENT_PRICE;
 	}
-
-	
 
 	@Override
 	public float getCurrentCutRate() {
 		return this.cutRate;
 	}
-
-	
 
 }

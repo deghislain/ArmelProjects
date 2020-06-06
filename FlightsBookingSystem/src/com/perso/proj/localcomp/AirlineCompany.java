@@ -10,10 +10,12 @@ import java.util.List;
 import com.perso.proj.entities.Order;
 import com.perso.proj.enums.EBSOperations;
 import com.perso.proj.enums.EOrderStatus;
+import com.perso.proj.services.servimpl.PricingModelService;
 import com.perso.proj.services.servinterface.IBankServices;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 import com.perso.proj.services.servinterface.IMultiCellBufferServices;
 import com.perso.proj.services.servinterface.IPricingModelService;
+import com.perso.proj.utils.UtilityClass;
 
 /**
  * @author deghislain
@@ -37,67 +39,86 @@ public class AirlineCompany extends Thread {
 
 	// the total number of tickets holds by an airline company at the opening of
 	// sales
-	private int ticketInitialStockNumb;
+	private static int ticketInitialStockNumb;
 
 	// indicates how many times there was a price cut
 	private static int PRICE_CUT_EVENT_COUNTER = 0;
 	
+	//indicate the total number of sales received since the sales started
 	private static int TOTAL_NUM_ORDERS = 0;
 
 	// indicates the up to date price of a ticket
-	private double currentTicketPrice;
-
-	private int totNumberOrdRec;
+	private static double CURRENT_TICKET_PRICE = 50;
 
 	// indicates the number of order received before there was a price cut
-	private int numOrderRecAtLastPriceCut;
+	private static int  NUM_ORDER_REC_AT_LAST_PRICE_CUT;
 
 	// indicates the number of order received after the last price cut
-	private int numOrdRecSinceLastPriceCut;
+	private static int NUM_ORDER_REC_SINCE_LAST_PRICE_CUT;
 
 	// indicates the current number of tickets holds by the AC
-	private int numAvailableTicket;
+	private static int TOTAL_NUM_AVAILABLE_TICKET;
 
 	// indicates at when the AC start selling ticket
 	private Date dateInitSale;
 
+	//Indicates the orders processed by a specific AC
 	private List<Order> processedOrders;
+	
+	private PriceCutEventEmiter pcEvent;
+	
 
-	public AirlineCompany(IMultiCellBufferServices mbs, ICreditCardBufferServices ccb, IBankServices bs,
-			IPricingModelService pms, int initialStock) {
+	public AirlineCompany(IMultiCellBufferServices mbs, ICreditCardBufferServices ccb, IBankServices bs, PriceCutEventEmiter pce, int initialStock) {
 		this.buffer = mbs;
 		this.cardBuffer = ccb;
 		this.bank = bs;
-		this.pricingModel = pms;
+		this.pricingModel =  new PricingModelService(initialStock) ;
 		this.ticketInitialStockNumb = initialStock;
-		this.currentTicketPrice = 50;
+		TOTAL_NUM_AVAILABLE_TICKET = initialStock;
 		this.dateInitSale = new Date();
 		this.processedOrders = new ArrayList<Order>();
+		this.pcEvent = pce;
 	}
 
 	public void run() {
-		this.updateSalesInfo();
-		this.updatePrice();
-		this.processNextOrder();
-		this.updateOrderStatus();
+		System.out.println("Started Thread: " + this.getName() + " At "+ UtilityClass.getCurrentTime());
+		while (PRICE_CUT_EVENT_COUNTER < 100) {
+			try {
+				this.updateSalesInfo();
+				this.updatePrice();
+				this.processNextOrder();
+				this.updateOrderStatus();
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		System.out.println("Ended Thread: " + this.getName() + " At "+ UtilityClass.getCurrentTime());
 	}
 
 	private void updateSalesInfo() {
-		this.pricingModel.updateSalesData(this.numOrderRecAtLastPriceCut, this.numOrdRecSinceLastPriceCut,
-				this.numAvailableTicket, this.dateInitSale);
+		this.pricingModel.updateSalesData(NUM_ORDER_REC_AT_LAST_PRICE_CUT, NUM_ORDER_REC_SINCE_LAST_PRICE_CUT,
+				TOTAL_NUM_AVAILABLE_TICKET, this.dateInitSale);
 	}
 
-	private void updatePrice() {
-		this.currentTicketPrice = pricingModel.getTicketCurrentPrice();
+	private synchronized void updatePrice() {
+		double newPrice = pricingModel.getTicketCurrentPrice();
+		if(newPrice < CURRENT_TICKET_PRICE) {
+			priceCutDataUpdate();
+		}else if(newPrice > CURRENT_TICKET_PRICE) {
+			pcEvent.sendNewPriceToTA(newPrice);
+		}
+		CURRENT_TICKET_PRICE = newPrice;
 	}
 
 	private void processNextOrder() {
 		Order currOrder = this.buffer.getOneCell();
 		if (currOrder != null) {
 			OrderProcessing op = new OrderProcessing(currOrder, this.cardBuffer, this.pricingModel, this.bank);
-			// Thread opThread = new Thread(op); //TODO uncomment these 2 lines
-			// opThread.start();
-			op.run(); // TODO //remove after test
+			Thread opThread = new Thread(op); //TODO uncomment these 2 lines
+			opThread.start();
+			op.run(); 
 			updateOrdersData(currOrder.getAmount());
 			synchronized (this.processedOrders) {
 				this.processedOrders.add(currOrder);
@@ -135,19 +156,22 @@ public class AirlineCompany extends Thread {
 	}
 	
 	//this method is called only when there is price cut
-	private synchronized void priceCutDataUpdate(){
+	private void priceCutDataUpdate(){
 		PRICE_CUT_EVENT_COUNTER++;
-		this.numOrderRecAtLastPriceCut = TOTAL_NUM_ORDERS;
+		NUM_ORDER_REC_AT_LAST_PRICE_CUT = TOTAL_NUM_ORDERS;
 	}
 	
 	private synchronized void updateOrdersData(int numTicket) {
 		TOTAL_NUM_ORDERS++;
-		this.numOrdRecSinceLastPriceCut = TOTAL_NUM_ORDERS - this.numOrderRecAtLastPriceCut;
-		this.numAvailableTicket = this.ticketInitialStockNumb - numTicket;
+		NUM_ORDER_REC_SINCE_LAST_PRICE_CUT = TOTAL_NUM_ORDERS - NUM_ORDER_REC_AT_LAST_PRICE_CUT;
+		TOTAL_NUM_AVAILABLE_TICKET = TOTAL_NUM_AVAILABLE_TICKET - numTicket;
 	}
 	
+	
+	
 	public double getTicketCurrentPrice() {
-		return this.currentTicketPrice;
+		return CURRENT_TICKET_PRICE;
 	}
+	
 
 }

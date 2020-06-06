@@ -5,7 +5,6 @@ package com.perso.proj.unittest;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Date;
 import java.util.Random;
@@ -19,6 +18,7 @@ import com.perso.proj.entities.Order;
 import com.perso.proj.enums.EBSOperations;
 import com.perso.proj.enums.EOrderStatus;
 import com.perso.proj.localcomp.AirlineCompany;
+import com.perso.proj.localcomp.PriceCutEventEmiter;
 import com.perso.proj.services.servimpl.BankServices;
 import com.perso.proj.services.servimpl.CreditCardBufferServices;
 import com.perso.proj.services.servimpl.EncryptionService;
@@ -29,7 +29,7 @@ import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 import com.perso.proj.services.servinterface.IEncryptionService;
 import com.perso.proj.services.servinterface.IMultiCellBufferServices;
 import com.perso.proj.services.servinterface.IPricingModelService;
-import com.perso.proj.utils.DateUtils;
+import com.perso.proj.utils.UtilityClass;
 
 /**
  * @author deghislain
@@ -43,7 +43,7 @@ public class TestAirlineCompany {
 	
 	private static IBankServices bank;
 	
-	private static IPricingModelService pricingModel;
+	//private static IPricingModelService pricingModel;
 	
 	static int ticketInitialStockNumb;
 	
@@ -55,6 +55,8 @@ public class TestAirlineCompany {
 	
 	static String card;
 	
+	static PriceCutEventEmiter pce;
+	
 	private final static int KEY1 = 20; //keys for encryption
 	
 	private final static int KEY2 = 25;
@@ -65,11 +67,12 @@ public class TestAirlineCompany {
 		cardBuffer = new CreditCardBufferServices();
 		bank = new BankServices(cardBuffer);
 		ticketInitialStockNumb = 1000;
-		pricingModel = new PricingModelService(ticketInitialStockNumb);
+		//pricingModel = new PricingModelService(ticketInitialStockNumb);
 		encrService = new EncryptionService();
 		
+		pce = new PriceCutEventEmiter();
 		
-		 ac = new AirlineCompany(buffer, cardBuffer, bank, pricingModel, ticketInitialStockNumb);
+		 ac = new AirlineCompany(buffer, cardBuffer, bank, pce, ticketInitialStockNumb);
 		 
 		 
 		 Random rand = new Random();
@@ -82,7 +85,7 @@ public class TestAirlineCompany {
 		 order.setStatus(EOrderStatus.NEW);
 		 order.setUnitPrice(55);
 		 order.setOrderId(orderId);
-		 order.setOrderDate(DateUtils.getCurrentTime());
+		 order.setOrderDate(UtilityClass.getCurrentTime());
 			
 	}
 	
@@ -117,7 +120,6 @@ public class TestAirlineCompany {
 		buffer.setOneCell(order);
 		ac.run();
 		String feedback = cardBuffer.getCardCell(1, "TA"); // TA get feedback for this order
-		//Order processedOrder = buffer.getOneCell();
 		if(feedback != null && !feedback.isEmpty()) {
 		rcToken = feedback.split("\\-");
 		 confirmation = rcToken[2];
