@@ -62,6 +62,8 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	
 	private final static double DEPOSIT_AMOUNT = 100000;//max deposit amount for each TA
 	
+	//private int amountLastOrder;
+	
 
 
 	public TravelAgency(IMultiCellBufferServices mcbs, ICreditCardBufferServices ccb, IBankServices bs) {
@@ -71,6 +73,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		this.buffer = mcbs;
 		this.isOrderConfirmed = false;
 		this.isWaitingConf = false;
+		//this.amountLastOrder = 0;
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 				//no additional order if waiting for confirmation on a previous order/ PERCENTAGE_TICKET_SOLD == at first call
 				if(!this.isWaitingConf) {
 					makeOrder(false);
-					Thread.sleep(3000);
+					Thread.sleep(1000);
 				}
 				
 				checkFeedBack();
@@ -172,7 +175,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 
 	//makes a special whenever possible in case of price cut
 	private void makeSpecialOrder() {
-		if(!this.isWaitingConf) {
+		if(!this.isWaitingConf || this.plafond == 150) {// a TA that is waiting for confirmation from a previous can only makes special orders
 			makeOrder(true);
 		}
 	}
@@ -187,7 +190,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		if(this.isFirstOrder || (this.currentTotalNumTicket < this.plafond && this.percentageTicketLeft <= 0.5)) {
 			amount = this.plafond - this.currentTotalNumTicket;
 			if(this.creditCard != null && !this.creditCard.isEmpty() && this.currentTotalNumTicket < this.plafond) {
-				Order order = createOrder(amount);
+				Order order = createOrder(amount, isSpecialOrder);
 				this.plafond = 100; //here we reset plafond to its ordinary value
 				this.buffer.setOneCell(order);
 				synchronized (this.orders) {
@@ -200,12 +203,12 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	}
 	
 	//create an order
-	private synchronized Order createOrder(int amount) {
+	private synchronized Order createOrder(int amount, boolean isSpecialOrder) {
 		Order o = new Order();
 		o.setAmount(amount);
 		o.setCreditCardNumber(this.creditCard);
 		o.setOrderDate(UtilityClass.getCurrentTime());
-		o.setOrderId(UtilityClass.getOrderId());
+		o.setOrderId(UtilityClass.getOrderId(isSpecialOrder));
 		o.setSenderId(this.getName());
 		o.setStatus(EOrderStatus.NEW);
 		o.setUnitPrice(CURRENT_PRICE);
@@ -250,17 +253,13 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		}
 	}
 
-	/*@Override
-	public synchronized void onPriceCut(double priceCut) {
-		CURRENT_PRICE = priceCut;
-		makeSpecialOrder();
-	}*/
 
 	@Override
 	public synchronized void onPriceChange(double newPrice) {
 		double oldPrice = CURRENT_PRICE;
 		CURRENT_PRICE = newPrice;
 		if(newPrice < oldPrice) {//this mean price cut the TA can make a special order if necessary
+			this.plafond = 150; // we increase the max number of ticket that a TA can handle to 150
 			makeSpecialOrder();
 		}
 	}

@@ -3,7 +3,7 @@
  */
 package com.perso.proj.utils;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -13,12 +13,19 @@ import java.util.Random;
  */
 public class UtilityClass {
 	public static String getCurrentTime() {
-		 Date currentDate = new Date();
-		 return  DateFormat.getTimeInstance().format(currentDate);  
+		SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss.SS");
+		 String currentDate = sdf.format(new Date());
+		 return currentDate;
 	}
 	
-	public static String getOrderId() {
+	public static String getOrderId(boolean isSpecialOrder) {
 		 Random rand = new Random();
-		return "O" + new Date().getTime() + rand.nextInt(5000);
+		 String prefix = "";
+		 if(isSpecialOrder) {
+			 prefix = "OS";
+		 }else {
+			 prefix = "O";
+		 }
+		return prefix + new Date().getTime() + rand.nextInt(5000);
 	}
 }

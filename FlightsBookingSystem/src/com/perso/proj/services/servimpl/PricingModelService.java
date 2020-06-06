@@ -49,9 +49,7 @@ public class PricingModelService implements IPricingModelService{
 
     //Indicates when the Airline start selling ticket
     private Date dateInitSale;
-    
-    //Indicates a min random value used to simulate a random evolution of a price
-    private int minRandomVal;
+
     
     public PricingModelService(int initStockTicket)
     {
@@ -71,7 +69,6 @@ public class PricingModelService implements IPricingModelService{
         this.numOrderRecSinceLPC = 0;
         this.numOrdRecAtLPC = 0;
         this.dateInitSale = new Date();
-        this.minRandomVal = 0;
     }
     
    @Override
@@ -87,7 +84,7 @@ public class PricingModelService implements IPricingModelService{
     {
     	  float percTicSold = 0;
     	  int numTicketSold = 0;
-    	
+    	  
     	//float newRate =0;
         //The price cut has not happen yet, and the number of ticket sold is too low
         if (numOrderRecSinceLPC == 0 && numOrdRecAtLPC == 0)
@@ -121,53 +118,68 @@ public class PricingModelService implements IPricingModelService{
             }
             // Here we estimate the growth of orders since the last price cut 
             float perOrderGrowthSinceLPC = 1f *this.numOrderRecSinceLPC / (this.numOrdRecAtLPC + this.numOrderRecSinceLPC);
-
-            if (perOrderGrowthSinceLPC < 0.4)
+            
+            if (perOrderGrowthSinceLPC <= 0.2)
             {
-            	this.cutRate -= 15; //with this we will have a 15% reduction on the current price
+            	this.cutRate -= 5; //with this we will have a 5% reduction on the current price
             }
             else
             {
-            	this.cutRate += 1; //with this we will have a 1% increase on the current price
+            	this.cutRate += 5; //with this we will have a 1% increase on the current price
             }
             
             if(CURRENT_PRICE >= 200 && percTicSold < 0.8 && this.cutRate > 0) { //the price has reached its max value and we still have a lot of ticket
             	this.cutRate -= 10;
             }
         }
+    	
     }
     
     // This method initialize the ticket price based on the week day
     private void updateCurrentPrice(){
-        //get a random day as current day for simulation purpose
-        Random r = new Random();
-        int indexDay = r.nextInt(this.weekDays.length);
-        //To have days moving forward, for example monday, tuesday, wednesday... and not monday then sunday, saturday....
-        this.minRandomVal = indexDay + 1;
-        if (this.minRandomVal == this.weekDays.length)
-        {
-            this.minRandomVal = 0;
-        }
-        this.weekDay = weekDays[indexDay];
-        int dailyRate = this.dailyPriceVariationRate.get(this.weekDay);
-       
-        double currPrice = CURRENT_PRICE;
-        currPrice = currPrice + (currPrice * dailyRate) / 100;
-        currPrice = currPrice + currPrice * this.cutRate;
+		// get a random day as current day for simulation purpose
+		Random r = new Random();
+		int indexCurrentDay = getIndexCurrentDay();
+		if (indexCurrentDay != -1) {
+			int indexDay = r.nextInt(this.weekDays.length);
+			if(indexDay <= indexCurrentDay) {
+				indexDay +=1; // To have days moving forward, for example monday, tuesday, wednesday... and not monday then sunday, saturday....
+			}
+			if (indexDay == this.weekDays.length) {
+				indexDay = 0;
+			}
+			this.weekDay = weekDays[indexDay];
+			int dailyRate = this.dailyPriceVariationRate.get(this.weekDay);
 
-        //This is to keep the price within the range as specified
-        if (currPrice < MIN_PRICE)
-        {
-            currPrice = MIN_PRICE;
-        }
-        if (currPrice > MAX_PRICE)
-        {
-            currPrice = MAX_PRICE;
-        }
-        CURRENT_PRICE = currPrice;
-       
+			double currPrice = CURRENT_PRICE;
+			
+			if(currPrice >=  MIN_PRICE) {
+				currPrice = currPrice + (currPrice * dailyRate) / 100;
+				double percDrop = currPrice/CURRENT_PRICE;
+				if(percDrop <= 0.1 && currPrice >=  MIN_PRICE) {
+					currPrice = currPrice + currPrice * this.cutRate;
+				}
+			}
+			// This is to keep the price within the range as specified
+			if (currPrice < MIN_PRICE) {
+				currPrice = MIN_PRICE;
+			}
+			if (currPrice > MAX_PRICE) {
+				currPrice = MAX_PRICE;
+			}
+			CURRENT_PRICE = currPrice;
+		}
+	}
+    private int getIndexCurrentDay() {
+    	int indexDay = -1;
+    	for(int index = 0; index < this.weekDays.length; index++) {
+    		if(this.weekDay.equals(this.weekDays[index])) {
+    			indexDay = index;
+    			break;
+    		}
+    	}
+    	return indexDay;
     }
-
 	
 	//This method implement updateTicketPrice
     public void updateSalesData(int numOrdRecAtLPC, int numOrdRecSinceLPC, int numAvailableTick, Date dateInitSale)

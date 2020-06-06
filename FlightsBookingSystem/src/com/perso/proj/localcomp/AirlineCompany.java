@@ -106,16 +106,25 @@ public class AirlineCompany extends Thread {
 	private synchronized void updatePrice() {
 		double newPrice = pricingModel.getTicketCurrentPrice();
 		if(newPrice < CURRENT_TICKET_PRICE) {
-			priceCutDataUpdate();
+			try {
+				priceCutDataUpdate();
+				pcEvent.sendNewPriceToTA(newPrice);
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}else {
+			pcEvent.sendNewPriceToTA(newPrice);
 		}
-		pcEvent.sendNewPriceToTA(newPrice);
+		
+		
 		CURRENT_TICKET_PRICE = newPrice;
 	}
 
 	private void processNextOrder() {
 		Order currOrder = this.buffer.getOneCell();
 		if (currOrder != null) {
-			currOrder.setReceiverId("OP" +this.getName());
+			currOrder.setReceiverId(this.getName());
 			OrderProcessing op = new OrderProcessing(currOrder, this.cardBuffer, this.pricingModel, this.bank);
 			Thread opThread = new Thread(op); 
 			opThread.setName("OP " +this.getName());
