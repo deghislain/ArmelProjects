@@ -82,7 +82,7 @@ public class AirlineCompany extends Thread {
 
 	public void run() {
 		System.out.println("Started Thread: " + this.getName() + " At "+ UtilityClass.getCurrentTime());
-		while (PRICE_CUT_EVENT_COUNTER < 100) {
+		while (PRICE_CUT_EVENT_COUNTER < 20) {
 			try {
 				this.updateSalesInfo();
 				this.updatePrice();
@@ -94,6 +94,7 @@ public class AirlineCompany extends Thread {
 			}
 			
 		}
+		pcEvent.onStopEvent(true);//when the AC stop we notify the TA to stop too
 		System.out.println("Ended Thread: " + this.getName() + " At "+ UtilityClass.getCurrentTime());
 	}
 
@@ -106,19 +107,19 @@ public class AirlineCompany extends Thread {
 		double newPrice = pricingModel.getTicketCurrentPrice();
 		if(newPrice < CURRENT_TICKET_PRICE) {
 			priceCutDataUpdate();
-		}else if(newPrice > CURRENT_TICKET_PRICE) {
-			pcEvent.sendNewPriceToTA(newPrice);
 		}
+		pcEvent.sendNewPriceToTA(newPrice);
 		CURRENT_TICKET_PRICE = newPrice;
 	}
 
 	private void processNextOrder() {
 		Order currOrder = this.buffer.getOneCell();
 		if (currOrder != null) {
+			currOrder.setReceiverId("OP" +this.getName());
 			OrderProcessing op = new OrderProcessing(currOrder, this.cardBuffer, this.pricingModel, this.bank);
-			Thread opThread = new Thread(op); //TODO uncomment these 2 lines
+			Thread opThread = new Thread(op); 
+			opThread.setName("OP " +this.getName());
 			opThread.start();
-			op.run(); 
 			updateOrdersData(currOrder.getAmount());
 			synchronized (this.processedOrders) {
 				this.processedOrders.add(currOrder);

@@ -8,7 +8,9 @@ package com.perso.proj.localcomp;
  *
  */
 public interface PriceCutEventListener {
-	public void onPriceCut(double priceCut);
+	//public void onPriceCut(double priceCut);
 	
 	public void onPriceChange(double newPrice);
+	
+	public void onStopEvent(boolean isStop);
 }

@@ -65,8 +65,8 @@ public class OrderProcessing implements Runnable {
 
 	// This method print the result of the order processing
 	private void printOrder() {
-		System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s %n", "OrderId: " + this.myOrder.getOrderId(), "| Order Date: " + this.myOrder.getOrderDate(),
-				"| Ordered By: " + this.myOrder.getSenderId(),"| Amount: " + this.myOrder.getAmount(),"| Unit Price: " + this.myOrder.getUnitPrice(), "| Total Charges: " + this.calculateTotalAmount(), "| Order Processed at: " + UtilityClass.getCurrentTime());
+		System.out.printf("%-12s %-12s %-12s %-12s %-12s %-12s %-12s %-12s %n", "OrderId: " + this.myOrder.getOrderId(), "| Order Date: " + this.myOrder.getOrderDate(),
+				"| Ordered By: " + this.myOrder.getSenderId(),"| Processed By " + this.myOrder.getReceiverId(), "| Amount: " + this.myOrder.getAmount(),"| Unit Price: " + this.myOrder.getUnitPrice(), "| Total Charges: " + this.calculateTotalAmount(), "| Order Processed at: " + UtilityClass.getCurrentTime());
 	}
 
 	// This method notify The TA about the outcome of the current order processing

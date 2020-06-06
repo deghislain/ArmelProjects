@@ -54,6 +54,8 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	
 	private boolean isFirstOrder = true;
 	
+	private boolean IS_COMMAND_STOP_ISSUED = false;
+	
 	private final static int KEY1 = 20; // keys for encryption
 
 	private final static int KEY2 = 25;
@@ -74,18 +76,21 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	@Override
 	public void run() {
 		System.out.println("Started Thread: " + this.getName() + " At "+ UtilityClass.getCurrentTime());
-		while (this.currentTotalNumTicket >= 0) {
+		while (!IS_COMMAND_STOP_ISSUED) {
 			try {
 				this.percentageTicketLeft = 1f * this.currentTotalNumTicket/this.plafond;
 				applyForCreditCard();
 				//no additional order if waiting for confirmation on a previous order/ PERCENTAGE_TICKET_SOLD == at first call
 				if(!this.isWaitingConf) {
 					makeOrder(false);
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 				}
 				
 				checkFeedBack();
-				saleTicket();
+				if(this.currentTotalNumTicket > 0) {
+					saleTicket();
+				}
+				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -153,6 +158,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		}
 		
 		if(operation != null && operation.equals(EBSOperations.FEEDBACK_NO.name())) {
+			this.isWaitingConf = false;
 			Order o = getOrder(orderId);
 			//here we have an order that was rejected for insufficient fund
 			if(o != null) {
@@ -175,7 +181,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	private  void makeOrder(boolean isSpecialOrder) {
 		int amount = 0;
 		if(isSpecialOrder) {
-			this.plafond = 150; // the company cannot handle more than 150 tickets at a time no matter what
+			this.plafond = 150; // the company can handle more than 100 ticket in case of price cut event
 		}
 		
 		if(this.isFirstOrder || (this.currentTotalNumTicket < this.plafond && this.percentageTicketLeft <= 0.5)) {
@@ -194,7 +200,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	}
 	
 	//create an order
-	private Order createOrder(int amount) {
+	private synchronized Order createOrder(int amount) {
 		Order o = new Order();
 		o.setAmount(amount);
 		o.setCreditCardNumber(this.creditCard);
@@ -238,22 +244,25 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 			int rn = r.nextInt(5); // we do not sale more than 5 tickets at a time
 			this.currentTotalNumTicket -= rn;
 
-			if(this.percentageTicketLeft < 0.5) {//if the TA has already sold 50% of its plafond, a new order is placed 
+			if(this.percentageTicketLeft < 0.5) {//if the TA has already sold 50% of its plafond, a new order is placed automaticaly
 				makeOrder(false);
 			}
 		}
 	}
 
-	@Override
+	/*@Override
 	public synchronized void onPriceCut(double priceCut) {
 		CURRENT_PRICE = priceCut;
 		makeSpecialOrder();
-	}
+	}*/
 
 	@Override
 	public synchronized void onPriceChange(double newPrice) {
-		CURRENT_PRICE  = newPrice;
-		
+		double oldPrice = CURRENT_PRICE;
+		CURRENT_PRICE = newPrice;
+		if(newPrice < oldPrice) {//this mean price cut the TA can make a special order if necessary
+			makeSpecialOrder();
+		}
 	}
 	
 	private void makeAdeposit() {
@@ -261,5 +270,13 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		String encrCard = encrService.encrypt(this.creditCard, KEY1, KEY2);
 		ccBuffer.setCardCell(this.getName(), null, EBSOperations.DEPOSIT, encrCard, DEPOSIT_AMOUNT); // TA request a deposit of 100000$
 	}
+
+	@Override
+	public void onStopEvent(boolean isStop) {
+		IS_COMMAND_STOP_ISSUED = true;
+	}
+
+	
+	
 
 }

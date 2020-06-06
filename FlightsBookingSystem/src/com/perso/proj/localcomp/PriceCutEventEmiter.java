@@ -22,15 +22,21 @@ public class PriceCutEventEmiter {
 		listeners.add(lis);
 	}
 	
-	public void emitPriceCutEvent(double newPrice) {
+	/*public void emitPriceCutEvent(double newPrice) {
 		for(PriceCutEventListener pceListener : listeners) {
 			pceListener.onPriceCut(newPrice);
 		}
-	}
+	}*/
 	
 	public void sendNewPriceToTA(double newPrice) {
 		for(PriceCutEventListener pceListener : listeners) {
 			pceListener.onPriceChange(newPrice);
 		}
 	}
+	public void onStopEvent(boolean isStop) {
+		for(PriceCutEventListener pceListener : listeners) {
+			pceListener.onStopEvent(isStop);
+		}
+	}
+	
 }
