@@ -32,12 +32,12 @@ import com.perso.proj.mapred.services.TaskTrackerService;
  */
 @Controller
 @RequestMapping("/")
-public class MapRedController {
+public class MapRedController{
 	private static final long serialVersionUID = 1L;
 	protected final Log logger = LogFactory.getLog(getClass());
 	private static final String UPLOAD_DIRECTORY = "uploadedFiles";
 	private String msg;
-	private String status;
+	private String currentStatus;
 
     @Inject
 	private INameNodeService nService;
@@ -48,20 +48,20 @@ public class MapRedController {
     }
 	public MapRedController(NameNodeService nns) {
 		this.nService = nns;
-		this.status = "Waiting For File";
+		this.currentStatus = "Waiting For File";
 		this.msg = "";
 	}
-
+	
 	@RequestMapping(value ="upload", method = RequestMethod.POST)
 	public ModelAndView uploadFile(HttpServletRequest req, HttpServletResponse resp, ModelMap model) {
 		List<FileItem> formItems = processUploadFile(req, model);
 		if (null != formItems && !formItems.isEmpty()) {
 			String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
-			this.status = nService.storeFile(formItems, uploadPath);
-			model.addAttribute("status", this.status);
+			this.currentStatus = nService.storeFile(formItems, uploadPath);
+			model.addAttribute("status", this.currentStatus);
 		}else {
-			this.status = "File Upload Error";
-			model.addAttribute("status", this.status);
+			this.currentStatus = "File Upload Error";
+			model.addAttribute("status", this.currentStatus);
 		}
 		ModelAndView mv = new ModelAndView("index", model);
 		return mv;
@@ -79,16 +79,16 @@ public class MapRedController {
 			// parses the request's content to extract file data
 			formItems = upload.parseRequest(request);
 		} catch (Exception ex) {
-			this.status = "File Upload Error";
+			this.currentStatus = "File Upload Error";
 		}
 		
-		model.addAttribute("status", this.status);
+		model.addAttribute("status", this.currentStatus);
 		return formItems;
 	}
 	
 	
 	@RequestMapping(value = "partition", method = RequestMethod.POST)
-public ModelAndView performMapReduce(HttpServletRequest req, ModelMap model) {
+public ModelAndView performMapReduce(HttpServletRequest req,HttpServletResponse resp, ModelMap model) {
 	List<List<String>> parts = this.doDataPartition(req, model);
 	String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
 	
@@ -98,14 +98,14 @@ public ModelAndView performMapReduce(HttpServletRequest req, ModelMap model) {
 		int nt = Integer.parseInt(numThread);
 		IMapReduceBufferService mrbs = new MapReduceBufferService(parts);
 		ITaskTrackerService tts = new TaskTrackerService();
-		JobTrackerThread[] arrThread = new JobTrackerThread[nt];
-
-		for (int index = 0; index < nt; index++) {
-			arrThread[index] = new JobTrackerThread(mrbs, tts, this.nService, uploadPath);
-			arrThread[index].setName("Thread " + index);
-			arrThread[index].start();
+		
+		for (int i = 0; i < nt; i++) {
+			JobTrackerThread jobi =   new JobTrackerThread(mrbs, tts, this.nService, uploadPath);
+			jobi.setName("AC" + i);
+			jobi.start();
 			
 		}
+		//onStatusChange(req, resp, model, mrbs);
 	}
 	ModelAndView mv = new ModelAndView("index", model);
 	return mv;
@@ -120,13 +120,13 @@ public ModelAndView performMapReduce(HttpServletRequest req, ModelMap model) {
 				int nt = Integer.parseInt(numThread);
 				words = this.nService.partitionData(uploadPath, nt);
 				if (null != words && !words.isEmpty()) {
-					this.status = "Started Map Reduce";
-					model.addAttribute("status", this.status);
+					this.currentStatus = "Completed Partition";
+					model.addAttribute("status", this.currentStatus);
 				}else {
 					this.msg = "Error while processing the file. Make sure you have uploaded an appropriate file and try again";
 					model.addAttribute("message", this.msg);
-					this.status = "Map Reduce Error";
-					model.addAttribute("status", this.status);
+					this.currentStatus = "Map Reduce Error";
+					model.addAttribute("status", this.currentStatus);
 				}
 				
 			}else {
@@ -146,8 +146,8 @@ public ModelAndView performMapReduce(HttpServletRequest req, ModelMap model) {
 		HashMap<String, String> resultMap = this.nService.displayResults(uploadPath);
 		if(resultMap != null && !resultMap.isEmpty()) {
 			model.addAttribute("words", resultMap);
-			this.status = "Displaying Results";
-			model.addAttribute("status", this.status);
+			this.currentStatus = "Displaying Results";
+			model.addAttribute("status", this.currentStatus);
 		}else {
 			this.msg = "Nothing To Display, Make Sure You Have Uploaded A File And Perform A Map Reduce";
 			model.addAttribute("message", this.msg);
