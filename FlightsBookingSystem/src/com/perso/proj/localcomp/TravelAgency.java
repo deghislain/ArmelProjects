@@ -62,6 +62,8 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	
 	private final static double DEPOSIT_AMOUNT = 100000;//max deposit amount for each TA
 	
+	private static double NEW_PRICE = 50;
+	
 	//private int amountLastOrder;
 	
 
@@ -83,6 +85,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 			try {
 				this.percentageTicketLeft = 1f * this.currentTotalNumTicket/this.plafond;
 				applyForCreditCard();
+				updateCurrentPrice();
 				//no additional order if waiting for confirmation on a previous order/ PERCENTAGE_TICKET_SOLD == at first call
 				if(!this.isWaitingConf) {
 					makeOrder(false);
@@ -203,7 +206,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	}
 	
 	//create an order
-	private synchronized Order createOrder(int amount, boolean isSpecialOrder) {
+	private Order createOrder(int amount, boolean isSpecialOrder) {
 		Order o = new Order();
 		o.setAmount(amount);
 		o.setCreditCardNumber(this.creditCard);
@@ -255,13 +258,8 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 
 
 	@Override
-	public synchronized void onPriceChange(double newPrice) {
-		double oldPrice = CURRENT_PRICE;
-		CURRENT_PRICE = newPrice;
-		if(newPrice < oldPrice) {//this mean price cut the TA can make a special order if necessary
-			this.plafond = 150; // we increase the max number of ticket that a TA can handle to 150
-			makeSpecialOrder();
-		}
+	public void onPriceChange(double newPrice) {
+		NEW_PRICE = newPrice;
 	}
 	
 	private void makeAdeposit() {
@@ -274,8 +272,14 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	public void onStopEvent(boolean isStop) {
 		IS_COMMAND_STOP_ISSUED = true;
 	}
-
 	
-	
+	public synchronized void updateCurrentPrice() {
+		double oldPrice  = CURRENT_PRICE;
+		CURRENT_PRICE = NEW_PRICE;
+		if(NEW_PRICE < oldPrice) {//this mean price cut the TA can make a special order if necessary
+			this.plafond = 150; // we increase the max number of ticket that a TA can handle to 150
+			makeSpecialOrder();
+		}
+	}
 
 }
