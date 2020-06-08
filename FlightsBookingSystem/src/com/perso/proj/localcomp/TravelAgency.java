@@ -206,7 +206,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	}
 	
 	//create an order
-	private Order createOrder(int amount, boolean isSpecialOrder) {
+	private synchronized Order createOrder(int amount, boolean isSpecialOrder) {
 		Order o = new Order();
 		o.setAmount(amount);
 		o.setCreditCardNumber(this.creditCard);
@@ -273,7 +273,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		IS_COMMAND_STOP_ISSUED = true;
 	}
 	
-	public synchronized void updateCurrentPrice() {
+	private synchronized void updateCurrentPrice() {
 		double oldPrice  = CURRENT_PRICE;
 		CURRENT_PRICE = NEW_PRICE;
 		if(NEW_PRICE < oldPrice) {//this mean price cut the TA can make a special order if necessary
