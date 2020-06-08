@@ -6,6 +6,7 @@ package com.perso.proj.services.servimpl;
 import com.perso.proj.entities.Order;
 import com.perso.proj.services.servinterface.IMultiCellBufferServices;
 
+
 /**
  * @author deghislain
  *
@@ -42,7 +43,6 @@ public class MultiCellBufferServices implements IMultiCellBufferServices {
 
 			}
 			this.buffer.notifyAll();
-			;
 		}
 
 	}
@@ -82,9 +82,9 @@ public class MultiCellBufferServices implements IMultiCellBufferServices {
 	private int countNumEmptyCells() {
 		int mumEmptyCells = 0;
 		for (int i = 0; i < this.buffer.length; i++) {
-			if (this.buffer[i] == null) {
-				mumEmptyCells++;
-			}
+				if (this.buffer[i] == null) {
+					mumEmptyCells++;
+				}
 
 		}
 		return mumEmptyCells;

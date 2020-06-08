@@ -243,7 +243,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		CURRENT_PRICE = pcEventHand.getNewPrice();
 	}*/
 	
-	//this method basically helps stop the current thread
+	//this method basically sales tickets
 	private void saleTicket() {
 		if (this.isOrderConfirmed) { // the sales can only start if there is a confirmed(valid response => completed order) for at least one order
 			Random r = new Random();

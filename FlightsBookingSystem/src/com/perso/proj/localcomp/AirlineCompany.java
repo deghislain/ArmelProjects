@@ -39,7 +39,7 @@ public class AirlineCompany extends Thread {
 
 	// the total number of tickets holds by an airline company at the opening of
 	// sales
-	private static int ticketInitialStockNumb;
+	//private static int ticketInitialStockNumb;
 
 	// indicates how many times there was a price cut
 	private static int PRICE_CUT_EVENT_COUNTER = 0;
@@ -73,7 +73,7 @@ public class AirlineCompany extends Thread {
 		this.cardBuffer = ccb;
 		this.bank = bs;
 		this.pricingModel =  new PricingModelService(initialStock) ;
-		this.ticketInitialStockNumb = initialStock;
+		//this.ticketInitialStockNumb = initialStock;
 		TOTAL_NUM_AVAILABLE_TICKET = initialStock;
 		this.dateInitSale = new Date();
 		this.processedOrders = new ArrayList<Order>();
@@ -104,21 +104,23 @@ public class AirlineCompany extends Thread {
 	}
 
 	private synchronized void updatePrice() {
-		double newPrice = pricingModel.getTicketCurrentPrice();
+		double newPrice = UtilityClass .getRoundedValue(pricingModel.getTicketCurrentPrice());
+		
 		if(newPrice < CURRENT_TICKET_PRICE) {
 			try {
+				CURRENT_TICKET_PRICE = newPrice;
 				priceCutDataUpdate();
+				// no need to send the new price to TA if it has not changed
 				pcEvent.sendNewPriceToTA(newPrice);
-				Thread.sleep(5000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}else {
+		}else if(newPrice > CURRENT_TICKET_PRICE){ 
+			// no need to send the new price to TA if it has not changed
+			CURRENT_TICKET_PRICE = newPrice;
 			pcEvent.sendNewPriceToTA(newPrice);
 		}
-		
-		
-		CURRENT_TICKET_PRICE = newPrice;
 	}
 
 	private void processNextOrder() {
