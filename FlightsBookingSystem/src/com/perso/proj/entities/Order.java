@@ -3,8 +3,6 @@
  */
 package com.perso.proj.entities;
 
-import java.util.Date;
-
 import com.perso.proj.enums.EOrderStatus;
 
 /**

@@ -23,12 +23,10 @@ import com.perso.proj.services.servimpl.BankServices;
 import com.perso.proj.services.servimpl.CreditCardBufferServices;
 import com.perso.proj.services.servimpl.EncryptionService;
 import com.perso.proj.services.servimpl.MultiCellBufferServices;
-import com.perso.proj.services.servimpl.PricingModelService;
 import com.perso.proj.services.servinterface.IBankServices;
 import com.perso.proj.services.servinterface.ICreditCardBufferServices;
 import com.perso.proj.services.servinterface.IEncryptionService;
 import com.perso.proj.services.servinterface.IMultiCellBufferServices;
-import com.perso.proj.services.servinterface.IPricingModelService;
 import com.perso.proj.utils.UtilityClass;
 
 /**
@@ -56,10 +54,6 @@ public class TestAirlineCompany {
 	static String card;
 	
 	static PriceCutEventEmiter pce;
-	
-	private final static int KEY1 = 20; //keys for encryption
-	
-	private final static int KEY2 = 25;
 	
 	@BeforeAll
 	public static void setUp() {

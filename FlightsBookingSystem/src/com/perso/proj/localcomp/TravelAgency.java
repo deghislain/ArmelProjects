@@ -218,7 +218,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		return o;
 	}
 	
-	//this method update the order status and send a feedback to TA
+	//this method update the orders status for every TA
 		private synchronized void updateOrderStatus(String orderId, EOrderStatus newStatus) {
 			for (Order currOrder : this.orders) {
 				if(orderId.equals(currOrder.getStatus().name())) {
