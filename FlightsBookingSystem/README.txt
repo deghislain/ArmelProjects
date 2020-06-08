@@ -7,3 +7,6 @@ there is a promotional price, and the TA can decide to purchase some tickets or 
 
 In this project, some advanced programming concepts such as multithreading, distributed system(client/server architecture),
 and event/listening( when the price change, the Airline emit an event to notify the Travel Agency) were used.
+
+In order to start this application, right click on com/perso/proj/main/FlightsBookingSystem.java then select Run As
+java application.
