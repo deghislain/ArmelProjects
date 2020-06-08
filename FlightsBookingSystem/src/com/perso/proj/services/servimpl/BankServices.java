@@ -118,7 +118,7 @@ public class BankServices implements IBankServices {
 			String cardNum = grantCreditCard(travAgName);
 			if (cardNum != null && !cardNum.equals("")) {
 				this.cardBuffer.setCardCell(travAgName, null, EBSOperations.DELIVERY, cardNum, 0);
-				System.out.println("Bank deliver credit Card "+ cardNum + " to " + travAgName);
+				System.out.println("Bank delivered credit Card "+ cardNum + " to " + travAgName);
 				this.deliveredCards[index] = cardNum;
 			}
 		}
