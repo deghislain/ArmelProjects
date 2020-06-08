@@ -6,4 +6,4 @@ Company business logic; If the new price is lower than the previous price, the A
 there is a promotional price, and the TA can decide to purchase some tickets or not too.
 
 In this project, some advanced programming concepts such as multithreading, distributed system(client/server architecture),
-and event/listening( when the price change, the Airline emit an event to notify the Travel Agency)
+and event/listening( when the price change, the Airline emit an event to notify the Travel Agency) were used.
