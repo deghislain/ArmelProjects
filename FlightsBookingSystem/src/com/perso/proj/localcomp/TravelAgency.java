@@ -88,8 +88,8 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 				updateCurrentPrice();
 				//no additional order if waiting for confirmation on a previous order/ PERCENTAGE_TICKET_SOLD == at first call
 				if(!this.isWaitingConf) {
-					makeOrder(false);
 					Thread.sleep(1000);
+					makeOrder(false);
 				}
 				
 				checkFeedBack();
