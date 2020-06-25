@@ -34,6 +34,7 @@ public class ConverterController{
 	
 	@RequestMapping("/index")
 	public String showCalculusResult(HttpServletRequest req, Model model) {
+		logger.info("Enter showCalculusResult");
 		String numeral = req.getParameter("numeral");// we get the number provided by the user in html form
 		String from    = req.getParameter("from");
 		String result = "";
@@ -55,6 +56,7 @@ public class ConverterController{
 		}
 		
 		model.addAttribute("result", result);
+		logger.info("Exit showCalculusResult");
 		return "index";
 	}
 }
