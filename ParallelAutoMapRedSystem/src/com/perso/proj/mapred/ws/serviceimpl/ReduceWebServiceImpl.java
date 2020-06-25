@@ -30,7 +30,7 @@ public class ReduceWebServiceImpl implements IReduceWebService{
 	private HashMap<String, Integer> getReducedMap(List<KeyValuePair> mappedWords){
 		HashMap<String, Integer> results = new HashMap<String, Integer>();
 		for(KeyValuePair kvp : mappedWords){
-			if(null == results.get(kvp.getKey()) || results.get(kvp.getKey()).equals("")) {
+			if(null == results.get(kvp.getKey())) {
 				int freq = countNumOccurrences(kvp, mappedWords);
 				results.put(kvp.getKey(), freq);
 			}
