@@ -12,6 +12,9 @@ import java.util.Random;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.perso.proj.mapred.ws.entity.KeyValuePair;
 import com.perso.proj.mapred.ws.serviceinterf.ICombiningWebService;
 
@@ -20,6 +23,7 @@ import com.perso.proj.mapred.ws.serviceinterf.ICombiningWebService;
  *
  */
 public class JobTrackerThread extends Thread{
+	protected final Logger logger = LogManager.getLogger(JobTrackerThread.class);
 	private IMapReduceBufferService mrbService;
 	
 	private ITaskTrackerService ttService;
@@ -40,7 +44,7 @@ public class JobTrackerThread extends Thread{
 
 	@Override 
 	public void run() {
-		System.out.println("Started " + this.getName());
+		logger.info("Started " +this.getName());
 		while(!this.mrbService.getIsJobDone()) {
 			try {
 				Random rand = new Random();
@@ -76,11 +80,11 @@ public class JobTrackerThread extends Thread{
 			}
 			
 		}
-		System.out.println("End " + this.getName());
+		logger.info("End " + this.getName());
 	}
 	
 	private void doTheMapping(List<String> part) {
-		System.out.println("doTheMapping started by " + this.getName());
+		logger.info("doTheMapping started by " + this.getName());
 		List<KeyValuePair> mapped = new ArrayList<KeyValuePair>();
 		if(null != part) {
 			mapped = this.ttService.map(part);
@@ -88,11 +92,11 @@ public class JobTrackerThread extends Thread{
 				this.mrbService.addMappedDataToBuffer(mapped);
 			}
 		}
-		System.out.println("doTheMapping Ended by " + this.getName());
+		logger.info("doTheMapping Ended by " + this.getName());
 	}
 	
 	private void doTheReducing() {
-		System.out.println("doTheReducing started by " + this.getName());
+		logger.info("doTheReducing started by " + this.getName());
 		List<KeyValuePair> mapped = this.mrbService.getNextMappedData();
 		if(null != mapped) {
 			HashMap<String, Integer> reduced = this.ttService.reduce(mapped);
@@ -100,11 +104,11 @@ public class JobTrackerThread extends Thread{
 				this.mrbService.addReducedDataToBuffer(reduced);
 			}
 		}
-		System.out.println("doTheReducing Ended by " + this.getName());
+		logger.info("doTheReducing Ended by " + this.getName());
 	}
 	
 	private void doTheCombining(String path, HashMap<String, Integer> combBuf) {
-		System.out.println("doTheCombining started by " + this.getName());
+		logger.info("doTheCombining started by " + this.getName());
 		combBuf = this.mrbService.getCombBuffer();
 		HashMap<String, Integer> rb1 = this.mrbService.getNextReducedData();
 		HashMap<String, Integer> rb2 = new HashMap<String, Integer>();
@@ -146,10 +150,11 @@ public class JobTrackerThread extends Thread{
 			}
 
 		}
-		System.out.println("doTheCombining Ended by " + this.getName());
+		logger.info("doTheCombining Ended by " + this.getName());
 	}
 	
 	private ICombiningWebService getCombiningProxy() {
+		logger.info("Entered getCombiningProxy Method");
 		Service combServices = null;
 		ICombiningWebService proxy = null;
 		try {
@@ -161,17 +166,18 @@ public class JobTrackerThread extends Thread{
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		logger.info("Exiting getCombiningProxy Method");
 		return proxy;
 	}
 	
 	private synchronized void storeResults() {
-		
+		logger.info("Entered storeResults Method");
 			if(!this.mrbService.getIsResultsStored()) {
 				this.nameNodeService.storeResults(this.mrbService.getCombBuffer(), this.resultStoragePath); 
 				System.out.println("storeResults done by " + this.getName());
 				this.mrbService.setIsResultsStored(true);
 			}
-		
+		logger.info("Exiting storeResults Method");
 	}
 
 }

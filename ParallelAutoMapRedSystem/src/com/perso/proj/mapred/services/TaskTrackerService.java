@@ -10,6 +10,9 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.perso.proj.mapred.ws.entity.KeyValuePair;
 import com.perso.proj.mapred.ws.serviceinterf.IMappingWebService;
 import com.perso.proj.mapred.ws.serviceinterf.IReduceWebService;
@@ -20,9 +23,10 @@ import com.perso.proj.mapred.ws.serviceinterf.IReduceWebService;
  *
  */
 public class TaskTrackerService implements ITaskTrackerService{
-
+	protected final Logger logger = LogManager.getLogger(TaskTrackerService.class);
 	@Override
 	public List<KeyValuePair> map(List<String> words) {
+		logger.info("Started The Mapping");
 		IMappingWebService mProxy = getMappingProxy();
 		if(null != mProxy) {
 			return mProxy.map(words);
@@ -32,6 +36,7 @@ public class TaskTrackerService implements ITaskTrackerService{
 
 	@Override
 	public HashMap<String, Integer> reduce(List<KeyValuePair> mappedMap) {
+		logger.info("Started Reducing");
 		IReduceWebService rProxy = getReduceProxy();
 		if(null != rProxy) {
 			return rProxy.reduce(mappedMap);
@@ -41,6 +46,7 @@ public class TaskTrackerService implements ITaskTrackerService{
 	
 	
 	private IMappingWebService getMappingProxy() {
+		logger.info("Entered getMappingProxy Method");
 		Service mappingServices = null;
 		IMappingWebService proxy = null;
 		try {
@@ -51,11 +57,14 @@ public class TaskTrackerService implements ITaskTrackerService{
 			proxy = mappingServices.getPort(IMappingWebService.class);
 		}catch(Exception e) {
 			e.printStackTrace();
+			logger.error(e);
 		}
+		logger.info("Exiting getMappingProxy Method");
 		return proxy;
 	}
 	
 	private IReduceWebService getReduceProxy() {
+		logger.info("Entered getReduceProxy Method");
 		Service reduceServices = null;
 		IReduceWebService proxy = null;
 		try {
@@ -67,6 +76,7 @@ public class TaskTrackerService implements ITaskTrackerService{
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		logger.info("Exiting getReduceProxy Method");
 		return proxy;
 	}
 	 
