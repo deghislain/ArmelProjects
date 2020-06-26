@@ -35,7 +35,7 @@ import com.perso.proj.mapred.services.TaskTrackerService;
 @RequestMapping("/")
 public class MapRedController{
 	private static final long serialVersionUID = 1L;
-	protected final Logger log = LogManager.getLogger(MapRedController.class);
+	protected final Logger logger = LogManager.getLogger(MapRedController.class);
 	private static final String UPLOAD_DIRECTORY = "uploadedFiles";
 	private String msg;
 	private String currentStatus;
@@ -55,7 +55,7 @@ public class MapRedController{
 	
 	@RequestMapping(value ="upload", method = RequestMethod.POST)
 	public ModelAndView uploadFile(HttpServletRequest req, HttpServletResponse resp, ModelMap model) {
-		log.info("Entered uploadFile");
+		logger.info("Entered uploadFile");
 		List<FileItem> formItems = processUploadFile(req, model);
 		if (null != formItems && !formItems.isEmpty()) {
 			String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
@@ -66,12 +66,12 @@ public class MapRedController{
 			model.addAttribute("status", this.currentStatus);
 		}
 		ModelAndView mv = new ModelAndView("index", model);
-		log.info("Exit uploadFile");
+		logger.info("Exit uploadFile");
 		return mv;
 	}
 
 	private List<FileItem> processUploadFile(HttpServletRequest request, ModelMap model) {
-		log.info("Entered processUploadFile");
+		logger.info("Entered processUploadFile");
 		List<FileItem> formItems = null;
 		// configures upload settings
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -87,14 +87,14 @@ public class MapRedController{
 		}
 		
 		model.addAttribute("status", this.currentStatus);
-		log.info("Exit processUploadFile");
+		logger.info("Exit processUploadFile");
 		return formItems;
 	}
 	
 	
 	@RequestMapping(value = "partition", method = RequestMethod.POST)
 public ModelAndView performMapReduce(HttpServletRequest req,HttpServletResponse resp, ModelMap model) {
-		log.info("Entered performMapReduce");
+		logger.info("Entered performMapReduce");
 	List<List<String>> parts = this.doDataPartition(req, model);
 	String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
 	
@@ -114,11 +114,11 @@ public ModelAndView performMapReduce(HttpServletRequest req,HttpServletResponse 
 		//onStatusChange(req, resp, model, mrbs);
 	}
 	ModelAndView mv = new ModelAndView("index", model);
-	log.info("Exit performMapReduce");
+	logger.info("Exit performMapReduce");
 	return mv;
 }
 	private List<List<String>> doDataPartition(HttpServletRequest req, ModelMap model) {
-		log.info("Entered doDataPartition");
+		logger.info("Entered doDataPartition");
 		String numThread = req.getParameter("numThread");
 		List<List<String>> words = null;
 		String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
@@ -145,13 +145,13 @@ public ModelAndView performMapReduce(HttpServletRequest req,HttpServletResponse 
 			e.printStackTrace();
 			this.msg = "Invalid Number Of Threads";
 		}
-		log.info("Exit doDataPartition");
+		logger.info("Exit doDataPartition");
 		return words;
 	}
 	
 	@RequestMapping(value = "display", method = RequestMethod.GET)
 	public ModelAndView displayResults(HttpServletRequest req, ModelMap model) {
-		log.info("Entered displayResults");
+		logger.info("Entered displayResults");
 		String uploadPath = req.getServletContext().getRealPath("/") + UPLOAD_DIRECTORY;
 		HashMap<String, String> resultMap = this.nService.displayResults(uploadPath);
 		if(resultMap != null && !resultMap.isEmpty()) {
@@ -163,7 +163,7 @@ public ModelAndView performMapReduce(HttpServletRequest req,HttpServletResponse 
 			model.addAttribute("message", this.msg);
 		}
 		ModelAndView mv = new ModelAndView("index", model);
-		log.info("Exit displayResults");
+		logger.info("Exit displayResults");
 		return mv;
 	}
 
