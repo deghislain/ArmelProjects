@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class NameNodeService implements INameNodeService{
+	protected final Logger logger = LogManager.getLogger(NameNodeService.class);
 	private static final String RESULTS_FILE_NAME = "/results.xml";
 	
 	//This method store the uploaded file on disk
@@ -36,6 +39,7 @@ public class NameNodeService implements INameNodeService{
 	
 	//upload file implementation
 	private String store(List<FileItem> formItems, String filePath) {
+		logger.info("Entered storeFile Method");
 		String result = "";
 		try {
 			// creates the directory if it does not exist
@@ -56,21 +60,24 @@ public class NameNodeService implements INameNodeService{
 		} catch (Exception e) {
 			result = "File Upload Error";
 		}
+		logger.info("Exiting storeFile Method");
 		return result;
 	}
 
 	public List<List<String>> partitionData(String filePath, int numThread) {
+		logger.info("Entered Store Method");
 		List<String> lines = this.loadDocument(filePath);
 		List<String> words = getWords(lines);
 		List<List<String>> parts = null;
 		if(words != null && !words.isEmpty()) {
 			parts = this.splitData(words, numThread);
 		}
-		
+		logger.info("Exiting partitionData Method");
 		return parts;
 	}
 
 	private List<String> loadDocument(String filePath) {
+		logger.info("Entered loadDocument Method");
 		List<String> lines = new ArrayList<String>();
 		String[] files = new File(filePath).list();
 		if(null != files) {
@@ -104,20 +111,24 @@ public class NameNodeService implements INameNodeService{
 			}
 			
 		}
+		logger.info("Exiting loadDocument Method");
 		return lines;
 	}
 	
 	private List<String> getWords(List<String> lines){
+		logger.info("Entered getWords Method");
 		List<String>words = new ArrayList<String>();
 			for(String line : lines) {
 				String[] ws = line.split(" ");
 				words.addAll(Arrays.asList(ws));
 			}
+			logger.info("Exiting getWords Method");
 		return words;
 	}
 
 	//This method split the list of words into N list of words
 	private List<List<String>> splitData(List<String> allLines, int n) {
+		logger.info("Entered splitData Method");
 		 int rest = allLines.size()%n;//we might have some extra lines when spliting the document in n parts
          int numElt = allLines.size() / n;
          List<List<String>> parts = new ArrayList<List<String>>();
@@ -134,7 +145,7 @@ public class NameNodeService implements INameNodeService{
        //here we copy the last part + eventual extra
          List<String> part = allLines.subList(fromIndex, toIndex + rest);
          parts.add(part);
-
+         logger.info("Exiting splitData Method");
 		return parts;
 	}
 	
@@ -144,6 +155,7 @@ public class NameNodeService implements INameNodeService{
 	}
 	
 	private String store(HashMap<String, Integer> results, String resultStoragePath) {
+		logger.info("Entered storeResults Method");
 		String result = "";
 		try {
 			Element words = new Element("words");
@@ -161,6 +173,7 @@ public class NameNodeService implements INameNodeService{
 			e.printStackTrace();
 			result = "Error While Storing Results";
 		}
+		logger.info("Exiting storeResults Method");
 		return result;
 	}
 	
@@ -170,6 +183,7 @@ public class NameNodeService implements INameNodeService{
 	}
 	
 	private HashMap<String, String> getResults(String filePath){
+		logger.info("Entered getResults Method");
 		HashMap<String, String> resultMap = new HashMap<String, String>();
 		filePath = filePath + RESULTS_FILE_NAME;
 		try {
@@ -185,7 +199,7 @@ public class NameNodeService implements INameNodeService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		logger.info("Exiting getResults Method");
 		return resultMap;
 	}
 
