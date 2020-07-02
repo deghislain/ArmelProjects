@@ -3,8 +3,6 @@
  */
 package com.perso.proj.rest.resources;
 
-import java.io.InputStream;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

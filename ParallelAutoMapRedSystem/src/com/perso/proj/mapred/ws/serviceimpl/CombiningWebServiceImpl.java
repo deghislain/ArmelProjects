@@ -23,10 +23,8 @@ public class CombiningWebServiceImpl implements ICombiningWebService {
 	}
 
 	private HashMap<String, Integer> getTheCombineList(HashMap<String, Integer> combMap, HashMap<String, Integer> redMap) {
-		//HashMap<String, Integer> newCombHashMap = new HashMap<String, Integer>();
 		
 		for (String key : redMap.keySet()) {
-			//if(newCombHashMap.get(key) == null) { //we avoid duplicate 
 				Integer combMapValue = combMap.get(key);
 				Integer redMapValue = redMap.get(key);
 				
@@ -36,8 +34,6 @@ public class CombiningWebServiceImpl implements ICombiningWebService {
 					redMapValue += combMapValue;
 					combMap.put(key, redMapValue);
 				}
-				
-			//}
 		}
 		return combMap;
 	}

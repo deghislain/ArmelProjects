@@ -57,7 +57,7 @@ public class TaskTrackerService implements ITaskTrackerService{
 			proxy = mappingServices.getPort(IMappingWebService.class);
 		}catch(Exception e) {
 			e.printStackTrace();
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 		logger.info("Exiting getMappingProxy Method");
 		return proxy;
@@ -75,6 +75,7 @@ public class TaskTrackerService implements ITaskTrackerService{
 			proxy = reduceServices.getPort(IReduceWebService.class);
 		}catch(Exception e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		logger.info("Exiting getReduceProxy Method");
 		return proxy;

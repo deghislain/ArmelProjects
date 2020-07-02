@@ -84,6 +84,7 @@ public class MapRedController{
 			formItems = upload.parseRequest(request);
 		} catch (Exception ex) {
 			this.currentStatus = "File Upload Error";
+			logger.error(ex.getMessage());
 		}
 		
 		model.addAttribute("status", this.currentStatus);
@@ -144,6 +145,7 @@ public ModelAndView performMapReduce(HttpServletRequest req,HttpServletResponse 
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.msg = "Invalid Number Of Threads";
+			logger.error(e.getMessage());
 		}
 		logger.info("Exit doDataPartition Method");
 		return words;

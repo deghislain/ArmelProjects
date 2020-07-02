@@ -68,7 +68,7 @@ public class JobTrackerThread extends Thread{
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				logger.error(e);
+				logger.error(e.getMessage());
 			}
 		}
 		if(this.mrbService.getIsJobDone() && !this.mrbService.getIsResultsStored()) {
@@ -78,7 +78,7 @@ public class JobTrackerThread extends Thread{
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				logger.error(e);
+				logger.error(e.getMessage());
 			}
 			
 		}

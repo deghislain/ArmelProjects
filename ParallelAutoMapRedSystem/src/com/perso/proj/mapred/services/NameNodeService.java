@@ -59,6 +59,7 @@ public class NameNodeService implements INameNodeService{
 			}
 		} catch (Exception e) {
 			result = "File Upload Error";
+			logger.error(e.getMessage());
 		}
 		logger.info("Exiting storeFile Method");
 		logger.debug(result);
@@ -103,6 +104,7 @@ public class NameNodeService implements INameNodeService{
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}finally{
 			try {
 				fr.close();
@@ -174,6 +176,7 @@ public class NameNodeService implements INameNodeService{
 		}catch(Exception e) {
 			e.printStackTrace();
 			result = "Error While Storing Results";
+			logger.error(e.getMessage());
 		}
 		logger.debug(result);
 		logger.info("Exiting storeResults Method");
@@ -201,7 +204,7 @@ public class NameNodeService implements INameNodeService{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 		logger.info("Exiting getResults Method");
 		return resultMap;
