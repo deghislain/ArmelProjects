@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -19,26 +21,31 @@ import org.jdom2.output.XMLOutputter;
  *
  */
 public class MessagesService implements IMessagesService{
-	private static final String RESULTS_FILE_NAME = "/messagesDir/messages.xml";
+	private static final String RESULTS_FILE_NAME = "/messages.xml";
+	protected final Logger logger = LogManager.getLogger(MessagesService.class);
 @Override
 public String sendMsgService(String senderID, String receiverID, String msg, String filePath) throws JDOMException, IOException {
 	return this.storeMsg(senderID, receiverID, msg, filePath);
 }
 
 private String storeMsg(String senderID, String receiverID, String msg, String filePath) throws JDOMException, IOException {
+	logger.info("Entered storeMsg");
+	logger.info("message stored at:");
 	String result = "";
-	String completePath = filePath + RESULTS_FILE_NAME;
 	
-	File messagesDir = new File(completePath);
+	
+	File messagesDir = new File(filePath);
+	String completePath = filePath + RESULTS_FILE_NAME;
 	Element newMsg = new Element("Message");
 	Element messages = null;
 	if (!messagesDir.exists()) {// we create the first message
 		messagesDir.mkdir();
 		
-		messages = new Element("Messages");
+		
 		newMsg.setAttribute("SenderID", senderID);
 		newMsg.setAttribute("ReceiverID", receiverID);
 		newMsg.setText(msg);
+		messages = new Element("Messages");
 		messages.addContent(newMsg);
 	}else {
 		
@@ -46,7 +53,7 @@ private String storeMsg(String senderID, String receiverID, String msg, String f
 		newMsg.setAttribute("ReceiverID", receiverID);
 		newMsg.setText(msg);
 		
-		//we get the existing file then we append the new file to it
+		//we get the existing file then we append the new message to it
 		File inputFile = new File(completePath);
 		SAXBuilder saxBuilder = new SAXBuilder();
         Document document = saxBuilder.build(inputFile);
@@ -57,6 +64,8 @@ private String storeMsg(String senderID, String receiverID, String msg, String f
 	 Document doc = new Document(messages);
      xmlOutputter.output(doc, new FileOutputStream(completePath));
 	result = "Message Successfully Sent";
+	logger.info("message stored at: " + RESULTS_FILE_NAME);
+	logger.info("Exiting storeMsg");
 	return result;
 }
 @Override
