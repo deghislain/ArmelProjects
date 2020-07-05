@@ -3,9 +3,7 @@
  */
 package com.perso.proj.msg.test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
