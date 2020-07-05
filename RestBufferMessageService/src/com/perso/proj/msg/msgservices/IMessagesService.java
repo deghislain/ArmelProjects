@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.perso.proj.msgservices;
+package com.perso.proj.msg.msgservices;
 
 import java.io.IOException;
 

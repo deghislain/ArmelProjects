@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.perso.proj.msgsresources;
+package com.perso.proj.msg.msgsresources;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.JDOMException;
 
-import com.perso.proj.msgservices.IMessagesService;
+import com.perso.proj.msg.msgservices.IMessagesService;
 
 
 /**

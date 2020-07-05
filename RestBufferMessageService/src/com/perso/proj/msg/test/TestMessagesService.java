@@ -1,7 +1,11 @@
 /**
  * 
  */
-package com.perso.proj.test;
+package com.perso.proj.msg.test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
@@ -9,8 +13,8 @@ import org.jdom2.JDOMException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.perso.proj.msgservices.IMessagesService;
-import com.perso.proj.msgservices.MessagesService;
+import com.perso.proj.msg.msgservices.IMessagesService;
+import com.perso.proj.msg.msgservices.MessagesService;
 
 /**
  * @author deghislain
@@ -36,8 +40,9 @@ public class TestMessagesService {
 	
 	@Test
 	public void testSendMsgService() {
+		String result = null;
 			try {
-				this.msgServ.sendMsgService(senderID, receiverID, msg, filePath);
+				result = this.msgServ.sendMsgService(senderID, receiverID, msg, filePath);
 			} catch (JDOMException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -45,6 +50,6 @@ public class TestMessagesService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+			assertNotNull(result);
 	}
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.perso.proj.msgservices;
+package com.perso.proj.msg.msgservices;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,57 +20,59 @@ import org.jdom2.output.XMLOutputter;
  * @author deghislain
  *
  */
-public class MessagesService implements IMessagesService{
+public class MessagesService implements IMessagesService {
 	private static final String RESULTS_FILE_NAME = "/messages.xml";
 	protected final Logger logger = LogManager.getLogger(MessagesService.class);
-@Override
-public String sendMsgService(String senderID, String receiverID, String msg, String filePath) throws JDOMException, IOException {
-	return this.storeMsg(senderID, receiverID, msg, filePath);
-}
 
-private String storeMsg(String senderID, String receiverID, String msg, String filePath) throws JDOMException, IOException {
-	logger.info("Entered storeMsg");
-	logger.info("message stored at:");
-	String result = "";
-	
-	
-	File messagesDir = new File(filePath);
-	String completePath = filePath + RESULTS_FILE_NAME;
-	Element newMsg = new Element("Message");
-	Element messages = null;
-	if (!messagesDir.exists()) {// we create the first message
-		messagesDir.mkdir();
-		
-		
-		newMsg.setAttribute("SenderID", senderID);
-		newMsg.setAttribute("ReceiverID", receiverID);
-		newMsg.setText(msg);
-		messages = new Element("Messages");
-		messages.addContent(newMsg);
-	}else {
-		
-		newMsg.setAttribute("SenderID", senderID);
-		newMsg.setAttribute("ReceiverID", receiverID);
-		newMsg.setText(msg);
-		
-		//we get the existing file then we append the new message to it
-		File inputFile = new File(completePath);
-		SAXBuilder saxBuilder = new SAXBuilder();
-        Document document = saxBuilder.build(inputFile);
-		messages = document.getRootElement();
-		messages.addContent(newMsg);
+	@Override
+	public String sendMsgService(String senderID, String receiverID, String msg, String filePath)
+			throws JDOMException, IOException {
+		return this.storeMsg(senderID, receiverID, msg, filePath);
 	}
-	 XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-	 Document doc = new Document(messages);
-     xmlOutputter.output(doc, new FileOutputStream(completePath));
-	result = "Message Successfully Sent";
-	logger.info("message stored at: " + RESULTS_FILE_NAME);
-	logger.info("Exiting storeMsg");
-	return result;
-}
-@Override
-public String[] receiveMsgService(String receiverID, Boolean purge, String filePath) {
-	// TODO Auto-generated method stub
-	return null;
-}
+
+	private String storeMsg(String senderID, String receiverID, String msg, String filePath)
+			throws JDOMException, IOException {
+		logger.info("Entered storeMsg");
+		String result = null;
+
+		File messagesDir = new File(filePath);
+		String completePath = filePath + RESULTS_FILE_NAME;
+		Element newMsg = new Element("Message");
+		Element messages = null;
+		Document document = null;
+		if (!messagesDir.exists()) {// we create the first message
+			messagesDir.mkdir();
+
+			newMsg.setAttribute("SenderID", senderID);
+			newMsg.setAttribute("ReceiverID", receiverID);
+			newMsg.setText(msg);
+			messages = new Element("Messages");
+			messages.addContent(newMsg);
+		} else {
+
+			newMsg.setAttribute("SenderID", senderID);
+			newMsg.setAttribute("ReceiverID", receiverID);
+			newMsg.setText(msg);
+
+			// we get the existing file then we append the new message to it
+			File inputFile = new File(completePath);
+			SAXBuilder saxBuilder = new SAXBuilder();
+			document = saxBuilder.build(inputFile);
+			messages = document.getRootElement();
+			messages.addContent(newMsg);
+		}
+		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+		xmlOutputter.output(document, new FileOutputStream(completePath));
+		result = "Message Successfully Sent";
+		
+		logger.info("message stored at: " + completePath);
+		logger.info("Exiting storeMsg");
+		return result;
+	}
+
+	@Override
+	public String[] receiveMsgService(String receiverID, Boolean purge, String filePath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
