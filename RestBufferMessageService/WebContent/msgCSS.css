@@ -1,0 +1,27 @@
+#extDiv{
+	border-color: #333333;
+	width: 70%; 
+	height: 635px; 
+	padding-left: 200px;
+}
+#intRightDiv{
+	align-content: right; 
+	border-color: #333333; 
+	width: 30%;
+	height: 435px; 
+	border-style: solid; 
+	border-width: 2px;  
+	position:absolute;
+	Right:100px;
+}
+
+#intLeftDiv{
+	align-content: left; 
+	border-color: #333333; 
+	width: 30%;
+	height: 435px; 
+	border-style: solid; 
+	border-width: 2px;
+	position:fixed;
+	
+}

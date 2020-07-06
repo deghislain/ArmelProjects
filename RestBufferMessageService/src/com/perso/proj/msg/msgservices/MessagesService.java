@@ -6,6 +6,9 @@ package com.perso.proj.msg.msgservices;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
+
+import javax.enterprise.context.SessionScoped;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,11 +19,18 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+
+
 /**
  * @author deghislain
  *
  */
-public class MessagesService implements IMessagesService {
+@SessionScoped
+public class MessagesService implements IMessagesService, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2416326753619681768L;
 	private static final String RESULTS_FILE_NAME = "/messages.xml";
 	protected final Logger logger = LogManager.getLogger(MessagesService.class);
 
@@ -49,7 +59,6 @@ public class MessagesService implements IMessagesService {
 			messages = new Element("Messages");
 			messages.addContent(newMsg);
 		} else {
-
 			newMsg.setAttribute("SenderID", senderID);
 			newMsg.setAttribute("ReceiverID", receiverID);
 			newMsg.setText(msg);

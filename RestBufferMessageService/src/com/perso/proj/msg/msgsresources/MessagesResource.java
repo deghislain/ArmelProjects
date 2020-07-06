@@ -25,8 +25,10 @@ import com.perso.proj.msg.msgservices.IMessagesService;
 @Path("messages")
 public class MessagesResource{
 	protected final Logger logger = LogManager.getLogger(MessagesResource.class);
-	@Inject
+	
 	IMessagesService msgServ;
+	
+	@Inject
 	public MessagesResource(IMessagesService serv) {
 		this.msgServ = serv;
 	}
@@ -34,18 +36,9 @@ public class MessagesResource{
 	@POST
 	@Consumes("text/plain")
 	public void sendMsg(@PathParam("senderID") String senderID, @PathParam("receiverID") String receiverID,
-			@PathParam("msg") String msg, @PathParam("filePath") String filePath){
+			@PathParam("msg") String msg, @PathParam("filePath") String filePath) throws JDOMException, IOException{
 		logger.info("Entered sendMsg" );
-		try {
 			this.msgServ.sendMsgService(senderID, receiverID, msg, filePath);
-		} catch (JDOMException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}
-		
 		logger.info("Exiting sendMsg" );
 	}
 }
