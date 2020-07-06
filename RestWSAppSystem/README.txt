@@ -12,3 +12,5 @@ one.
 
 3-StorageService, that allowed an user to store a file on server.
 
+To access the services, deploy the application on tomcat, then go here:
+http://localhost:8080/RestWSAppSystem
