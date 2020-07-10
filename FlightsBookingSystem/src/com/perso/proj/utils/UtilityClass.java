@@ -13,6 +13,9 @@ import java.util.Random;
  *
  */
 public class UtilityClass {
+	private UtilityClass() {
+		
+	}
 	public static String getCurrentTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss.SS");
 		 String currentDate = sdf.format(new Date());
