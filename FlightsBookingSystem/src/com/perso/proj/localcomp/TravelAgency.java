@@ -196,9 +196,9 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 				Order order = createOrder(amount, isSpecialOrder);
 				this.plafond = 100; //here we reset plafond to its ordinary value
 				this.buffer.setOneCell(order);
-				synchronized (this.orders) {
+				//synchronized (this.orders) {
 					this.orders.add(order);
-				}
+				//}
 				this.isWaitingConf = true;
 				this.isFirstOrder = false;
 			}
@@ -206,7 +206,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	}
 	
 	//create an order
-	private synchronized Order createOrder(int amount, boolean isSpecialOrder) {
+	private  Order createOrder(int amount, boolean isSpecialOrder) {
 		Order o = new Order();
 		o.setAmount(amount);
 		o.setCreditCardNumber(this.creditCard);
@@ -219,7 +219,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 	}
 	
 	//this method update the orders status for every TA
-		private synchronized void updateOrderStatus(String orderId, EOrderStatus newStatus) {
+		private  void updateOrderStatus(String orderId, EOrderStatus newStatus) {
 			for (Order currOrder : this.orders) {
 				if(orderId.equals(currOrder.getStatus().name())) {
 					currOrder.setStatus(newStatus);
@@ -273,7 +273,7 @@ public class TravelAgency extends Thread implements PriceCutEventListener{
 		IS_COMMAND_STOP_ISSUED = true;
 	}
 	
-	private synchronized void updateCurrentPrice() {
+	private  void updateCurrentPrice() {
 		double oldPrice  = CURRENT_PRICE;
 		CURRENT_PRICE = NEW_PRICE;
 		if(NEW_PRICE < oldPrice) {//this mean price cut the TA can make a special order if necessary

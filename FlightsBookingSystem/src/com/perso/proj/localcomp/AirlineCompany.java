@@ -100,7 +100,7 @@ public class AirlineCompany extends Thread {
 				TOTAL_NUM_AVAILABLE_TICKET, this.dateInitSale);
 	}
 
-	private synchronized void updatePrice() {
+	private  void updatePrice() {
 		double newPrice = UtilityClass .getRoundedValue(pricingModel.getTicketCurrentPrice());
 		
 		if(newPrice < CURRENT_TICKET_PRICE) {
